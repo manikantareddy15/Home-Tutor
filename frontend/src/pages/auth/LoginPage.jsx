@@ -30,7 +30,7 @@ const LoginPage = () => {
             <img
               src="/home_logo.jpg"
               alt="HomeTutor Logo"
-              className="w-24 h-24 rounded-full object-cover border-4 border-blue-600 shadow-lg"
+              className="w-24 h-24 rounded-full object-cover shadow-lg"
             />
           </div>
           <h1 className="text-3xl font-bold text-gray-800">HomeTutor</h1>
