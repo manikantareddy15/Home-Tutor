@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
   subjects: [{ type: String }],
   experienceYears: { type: Number, default: 0 },
   hourlyRate: { type: Number, default: 0 },
+  teachingModes: [{ type: String, enum: ["Online", "Offline"] }],
   rating: { type: Number, default: 4.5 },
   isApproved: { type: Boolean, default: false },
   isActive: { type: Boolean, default: true },

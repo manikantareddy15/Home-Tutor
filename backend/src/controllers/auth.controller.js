@@ -11,6 +11,7 @@ const sanitize = (u) => ({
   subjects: u.subjects,
   experienceYears: u.experienceYears,
   hourlyRate: u.hourlyRate,
+  teachingModes: u.teachingModes,
   rating: u.rating,
   isApproved: u.isApproved,
   bio: u.bio,
@@ -21,24 +22,18 @@ const sanitize = (u) => ({
 
 export const register = async (req, res) => {
   try {
-    console.log("Register endpoint hit with body:", req.body);
-    console.log("Files received:", req.files);
-    
-    const { fullName, email, password, role, class: studentClass } = req.body;
+    const { fullName, email, password, role, class: studentClass, subjects, experienceYears, hourlyRate, teachingModes } = req.body;
     
     if (!fullName || !email || !password) {
-      console.log("Missing fields:", { fullName, email, password });
       return res.status(400).json({ message: "Missing required fields (fullName, email, password)" });
     }
 
     if (![ROLES.STUDENT, ROLES.TUTOR].includes(role)) {
-      console.log("Invalid role:", role);
       return res.status(400).json({ message: "Invalid role" });
     }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      console.log("Email already exists:", email);
       return res.status(409).json({ message: "Email already exists" });
     }
 
@@ -53,6 +48,20 @@ export const register = async (req, res) => {
     if (role === ROLES.STUDENT) {
       userData.class = studentClass || "";
     } else if (role === ROLES.TUTOR) {
+      // Handle tutor profile fields
+      if (subjects) {
+        userData.subjects = Array.isArray(subjects) ? subjects : JSON.parse(subjects || "[]");
+      }
+      if (experienceYears) {
+        userData.experienceYears = parseInt(experienceYears);
+      }
+      if (hourlyRate) {
+        userData.hourlyRate = parseInt(hourlyRate);
+      }
+      if (teachingModes) {
+        userData.teachingModes = Array.isArray(teachingModes) ? teachingModes : JSON.parse(teachingModes || "[]");
+      }
+      
       // Handle tutor certificate uploads
       if (req.files?.cert11th) {
         userData.cert11th = req.files.cert11th[0].path;
@@ -65,9 +74,7 @@ export const register = async (req, res) => {
       }
     }
 
-    console.log("Creating user with:", userData);
     const user = await User.create(userData);
-    console.log("User created:", user._id);
 
     res.status(201).json({
       token: generateToken({ id: user._id, role: user.role }),

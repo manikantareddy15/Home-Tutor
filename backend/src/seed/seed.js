@@ -14,7 +14,6 @@ const run = async () => {
   const student = await User.create({ fullName: "Aanya Student", email: "student@hometutor.com", password: "Student@123", role: ROLES.STUDENT, isApproved: true });
   const tutor = await User.create({ fullName: "Rohit Tutor", email: "tutor@hometutor.com", password: "Tutor@123", role: ROLES.TUTOR, subjects: ["Math","Physics"], experienceYears: 4, hourlyRate: 500, rating: 4.8, isApproved: true });
   await Booking.create({ student: student._id, tutor: tutor._id, subject: "Math", mode: "online", startTime: new Date(Date.now()+3600000), endTime: new Date(Date.now()+7200000), hourlyRate: 500, totalPrice: 500, status: "confirmed" });
-  console.log("Seed completed");
   process.exit(0);
 };
 run().catch((e)=>{ console.error(e); process.exit(1); });

@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.routes.js";
@@ -26,7 +25,6 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
-app.use(morgan("dev"));
 
 // Serve uploads directory
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));

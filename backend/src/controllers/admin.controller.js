@@ -4,6 +4,11 @@ import { ROLES } from "../utils/constants.js";
 
 export const dashboardStats = async (req, res) => {
   try {
+    // Prevent caching for dashboard stats
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+
     const [totalTutors, totalStudents, pendingApprovals, sessionsToday] =
       await Promise.all([
         User.countDocuments({ role: ROLES.TUTOR }),
@@ -25,7 +30,7 @@ export const dashboardStats = async (req, res) => {
       .limit(10)
       .populate("student tutor", "fullName");
 
-    res.json({
+    res.status(200).json({
       stats: {
         totalTutors,
         totalStudents,
@@ -43,12 +48,17 @@ export const dashboardStats = async (req, res) => {
 
 export const getPendingTutors = async (req, res) => {
   try {
+    // Prevent caching for pending tutors
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+
     const pendingTutors = await User.find({
       role: ROLES.TUTOR,
       isApproved: false
     }).select("-password");
 
-    res.json({ pendingTutors });
+    res.status(200).json({ pendingTutors });
   } catch (err) {
     res.status(500).json({
       message: err.message || "Error fetching pending tutors"
@@ -69,7 +79,7 @@ export const approveTutor = async (req, res) => {
       return res.status(404).json({ message: "Tutor not found" });
     }
 
-    res.json({
+    res.status(200).json({
       message: "Tutor approved successfully",
       tutor
     });
@@ -89,7 +99,7 @@ export const rejectTutor = async (req, res) => {
       return res.status(404).json({ message: "Tutor not found" });
     }
 
-    res.json({
+    res.status(200).json({
       message: "Tutor application rejected and deleted"
     });
   } catch (err) {
@@ -101,9 +111,13 @@ export const rejectTutor = async (req, res) => {
 
 export const students = async (req, res) => {
   try {
-    res.json({
-      students: await User.find({ role: ROLES.STUDENT }).select("-password")
-    });
+    // Prevent caching for students list
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+
+    const studentsList = await User.find({ role: ROLES.STUDENT }).select("-password");
+    res.status(200).json({ students: studentsList });
   } catch (err) {
     res.status(500).json({ message: err.message || "Error fetching students" });
   }
@@ -111,9 +125,13 @@ export const students = async (req, res) => {
 
 export const tutors = async (req, res) => {
   try {
-    res.json({
-      tutors: await User.find({ role: ROLES.TUTOR }).select("-password")
-    });
+    // Prevent caching for tutors list
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+
+    const tutorsList = await User.find({ role: ROLES.TUTOR }).select("-password");
+    res.status(200).json({ tutors: tutorsList });
   } catch (err) {
     res.status(500).json({ message: err.message || "Error fetching tutors" });
   }
