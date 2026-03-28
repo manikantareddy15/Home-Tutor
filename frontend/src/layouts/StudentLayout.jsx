@@ -99,9 +99,7 @@ const StudentLayout = () => {
 
       {/* Main Content Area */}
       <div className="flex-1 overflow-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 px-4 sm:px-6 lg:px-8 py-6 sm:py-8 max-w-7xl mx-auto">
-          <Outlet />
-        </div>
+        <Outlet />
       </div>
 
       {/* Logout Button - Fixed at bottom right */}

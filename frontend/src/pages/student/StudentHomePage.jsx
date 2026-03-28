@@ -42,60 +42,60 @@ const StudentHomePage = () => {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8 px-4 sm:px-0">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8 px-4 sm:px-0">
         {/* Total Sessions Card */}
-        <div className="bg-white rounded-2xl shadow-md hover:shadow-xl border border-blue-200 border-t-4 border-t-blue-500 p-4 sm:p-7 transition-all duration-300 hover:scale-105 cursor-pointer group">
-          <div className="flex items-start justify-between gap-3">
+        <div className="bg-white rounded-xl shadow-md hover:shadow-lg border border-blue-200 border-t-4 border-t-blue-500 p-3 sm:p-4 transition-all duration-300 hover:scale-105 cursor-pointer group">
+          <div className="flex items-start justify-between gap-2">
             <div>
               <p className="text-blue-600 text-xs font-bold uppercase tracking-wider">Total Sessions</p>
-              <p className="text-3xl sm:text-4xl font-bold text-blue-900 mt-2 sm:mt-3">{stats.totalSessions}</p>
-              <p className="text-blue-500 text-xs mt-2 font-medium">This month</p>
+              <p className="text-2xl sm:text-3xl font-bold text-blue-900 mt-1 sm:mt-2">{stats.totalSessions}</p>
+              <p className="text-blue-500 text-xs mt-1 font-medium">This month</p>
             </div>
-            <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-3 sm:p-4 shadow-lg group-hover:shadow-xl transition-all duration-300 flex-shrink-0">
-              <svg className="w-6 sm:w-8 h-6 sm:h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg p-2 sm:p-3 shadow-lg group-hover:shadow-xl transition-all duration-300 flex-shrink-0">
+              <svg className="w-5 sm:w-6 h-5 sm:h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 6.253v13m0-13C6.596 6.253 2 10.849 2 16.5S6.596 26.747 12 26.747s10-4.596 10-10.247S17.404 6.253 12 6.253z" />
               </svg>
             </div>
           </div>
-          <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-blue-200">
+          <div className="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-blue-200">
             <p className="text-blue-600 text-xs font-semibold">↑ 12% from last month</p>
           </div>
         </div>
 
         {/* Total Spent Card */}
-        <div className="bg-white rounded-2xl shadow-md hover:shadow-xl border border-green-200 border-t-4 border-t-green-500 p-4 sm:p-7 transition-all duration-300 hover:scale-105 cursor-pointer group">
-          <div className="flex items-start justify-between gap-3">
+        <div className="bg-white rounded-xl shadow-md hover:shadow-lg border border-green-200 border-t-4 border-t-green-500 p-3 sm:p-4 transition-all duration-300 hover:scale-105 cursor-pointer group">
+          <div className="flex items-start justify-between gap-2">
             <div>
               <p className="text-green-600 text-xs font-bold uppercase tracking-wider">Total Spent</p>
-              <p className="text-3xl sm:text-4xl font-bold text-green-900 mt-2 sm:mt-3">${(stats.totalSpent / 100).toFixed(2)}</p>
-              <p className="text-green-500 text-xs mt-2 font-medium">Well managed</p>
+              <p className="text-2xl sm:text-3xl font-bold text-green-900 mt-1 sm:mt-2">${(stats.totalSpent / 100).toFixed(2)}</p>
+              <p className="text-green-500 text-xs mt-1 font-medium">Well managed</p>
             </div>
-            <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-3 sm:p-4 shadow-lg group-hover:shadow-xl transition-all duration-300 flex-shrink-0">
-              <svg className="w-6 sm:w-8 h-6 sm:h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg p-2 sm:p-3 shadow-lg group-hover:shadow-xl transition-all duration-300 flex-shrink-0">
+              <svg className="w-5 sm:w-6 h-5 sm:h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 0c6.627 0 12 5.373 12 12s-5.373 12-12 12S0 18.627 0 12 5.373 0 12 0zm0 2a10 10 0 100 20 10 10 0 000-20zm0 8a2 2 0 110 4 2 2 0 010-4zm0-2c-1.105 0-2 .895-2 2s.895 2 2 2 2-.895 2-2-.895-2-2-2z" />
               </svg>
             </div>
           </div>
-          <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-green-200">
+          <div className="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-green-200">
             <p className="text-green-600 text-xs font-semibold">↓ 8% from last month</p>
           </div>
         </div>
 
         {/* Learning Hours Card */}
-        <div className="bg-white rounded-2xl shadow-md hover:shadow-xl border border-yellow-200 border-t-4 border-t-yellow-500 p-4 sm:p-7 transition-all duration-300 hover:scale-105 cursor-pointer group">
-          <div className="flex items-start justify-between gap-3">
+        <div className="bg-white rounded-xl shadow-md hover:shadow-lg border border-yellow-200 border-t-4 border-t-yellow-500 p-3 sm:p-4 transition-all duration-300 hover:scale-105 cursor-pointer group">
+          <div className="flex items-start justify-between gap-2">
             <div>
               <p className="text-yellow-600 text-xs font-bold uppercase tracking-wider">Learning Hours</p>
-              <p className="text-3xl sm:text-4xl font-bold text-yellow-900 mt-2 sm:mt-3">{stats.learningHours}</p>
-              <p className="text-yellow-500 text-xs mt-2 font-medium">Keep it up!</p>
+              <p className="text-2xl sm:text-3xl font-bold text-yellow-900 mt-1 sm:mt-2">{stats.learningHours}</p>
+              <p className="text-yellow-500 text-xs mt-1 font-medium">Keep it up!</p>
             </div>
-            <div className="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl p-3 sm:p-4 shadow-lg group-hover:shadow-xl transition-all duration-300 flex-shrink-0">
-              <svg className="w-6 sm:w-8 h-6 sm:h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <div className="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-lg p-2 sm:p-3 shadow-lg group-hover:shadow-xl transition-all duration-300 flex-shrink-0">
+              <svg className="w-5 sm:w-6 h-5 sm:h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
               </svg>
             </div>
           </div>
-          <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-yellow-200">
+          <div className="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-yellow-200">
             <p className="text-yellow-600 text-xs font-semibold">↑ 24% from last month</p>
           </div>
         </div>
