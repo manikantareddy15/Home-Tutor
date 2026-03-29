@@ -18,9 +18,7 @@ const TutorLayout = () => {
     const fetchNotifications = async () => {
       try {
         setLoadingNotifications(true);
-        console.log("Fetching notifications for tutor:", user?._id);
         const res = await api.get("/notifications");
-        console.log("Notifications response:", res.data);
         if (res.data.notifications) {
           setNotifications(res.data.notifications);
         } else {
@@ -34,13 +32,14 @@ const TutorLayout = () => {
       }
     };
 
-    if (user?._id) {
+    const userId = user?.id || user?._id;
+    if (userId) {
       fetchNotifications();
       // Refresh notifications every 30 seconds
       const interval = setInterval(fetchNotifications, 30000);
       return () => clearInterval(interval);
     }
-  }, [user?._id]);
+  }, [user?.id, user?._id]);
 
   const getNotificationColor = (type) => {
     const colors = {
@@ -135,9 +134,8 @@ const TutorLayout = () => {
                         <div
                           key={notification._id}
                           onClick={() => setShowNotifications(false)}
-                          className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition ${
-                            notification.read ? "opacity-60" : ""
-                          }`}
+                          className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition ${notification.read ? "opacity-60" : ""
+                            }`}
                         >
                           <div className="flex gap-3">
                             <div className={`w-3 h-3 rounded-full flex-shrink-0 mt-1 ${getNotificationDotColor(notification.type)}`}></div>
@@ -219,11 +217,10 @@ const TutorLayout = () => {
                 <button
                   key={link.to}
                   onClick={() => navigate(link.to)}
-                  className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-lg transition whitespace-nowrap flex-shrink-0 text-xs sm:text-sm ${
-                    isActive
+                  className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-lg transition whitespace-nowrap flex-shrink-0 text-xs sm:text-sm ${isActive
                       ? "bg-purple-100 text-purple-700"
                       : "text-gray-700 hover:bg-purple-50 hover:text-purple-600"
-                  }`}
+                    }`}
                 >
                   <span className={isActive ? "text-purple-600" : "text-gray-600 hover:text-purple-600"}>
                     {getIcon(link.icon)}

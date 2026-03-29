@@ -25,10 +25,10 @@ export const createBooking = async (req, res) => {
       return res.status(400).json({ message: "Invalid mode. Must be 'online' or 'offline'" });
     }
 
-    const tutor = await User.findOne({ 
-      _id: tutorId, 
-      role: ROLES.TUTOR, 
-      isApproved: true 
+    const tutor = await User.findOne({
+      _id: tutorId,
+      role: ROLES.TUTOR,
+      isApproved: true
     });
 
     if (!tutor) {
@@ -56,7 +56,7 @@ export const createBooking = async (req, res) => {
       bookingData.sessionTime = sessionTime || "10:00";
       bookingData.duration = duration;
       bookingData.totalPrice = totalPrice || tutor.hourlyRate * duration;
-    } 
+    }
     // Old format with startTime and endTime
     else if (startTime && endTime) {
       const start = new Date(startTime);
@@ -72,7 +72,7 @@ export const createBooking = async (req, res) => {
       bookingData.endTime = end;
       bookingData.duration = hours;
       bookingData.totalPrice = tutor.hourlyRate * hours;
-    } 
+    }
     else {
       return res.status(400).json({ message: "Either (date, duration) or (startTime, endTime) must be provided" });
     }
@@ -175,11 +175,33 @@ export const updateBookingStatus = async (req, res) => {
     await booking.save();
 
     const student = await User.findById(booking.student);
-    await notify(
-      booking.student,
-      "Booking status updated",
-      `Your booking status has been updated to: ${status}`
-    );
+    const tutor = await User.findById(booking.tutor);
+
+    if (status === BOOKING_STATUS.CONFIRMED) {
+      await notify(
+        booking.student,
+        "Booking Accepted! 🎉",
+        `${tutor?.fullName || "Your tutor"} has accepted your booking for ${booking.subject}. Get ready for your session!`
+      );
+    } else if (status === BOOKING_STATUS.REJECTED) {
+      await notify(
+        booking.student,
+        "Booking Rejected",
+        `${tutor?.fullName || "Your tutor"} has rejected your booking for ${booking.subject}.`
+      );
+    } else if (status === BOOKING_STATUS.ONGOING) {
+      await notify(
+        booking.student,
+        "Session Started",
+        `Your session for ${booking.subject} with ${tutor?.fullName || "your tutor"} has started.`
+      );
+    } else {
+      await notify(
+        booking.student,
+        "Booking status updated",
+        `Your booking for ${booking.subject} has been updated to: ${status}`
+      );
+    }
 
     const updatedBooking = await Booking.findById(req.params.id)
       .populate("student", "fullName email")
@@ -220,11 +242,11 @@ export const verifySessionCode = async (req, res) => {
     // Verify the code - trim and compare as strings
     const trimmedCode = String(code).trim();
     const storedCode = String(booking.sessionCode).trim();
-    
+
     console.log(`Verifying code: input="${trimmedCode}" (length=${trimmedCode.length}) vs stored="${storedCode}" (length=${storedCode.length})`);
 
     if (trimmedCode !== storedCode) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         message: "Invalid session code",
         debug: process.env.NODE_ENV === "development" ? { input: trimmedCode, stored: storedCode } : undefined
       });

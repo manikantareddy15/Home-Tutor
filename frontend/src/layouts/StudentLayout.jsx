@@ -18,9 +18,7 @@ const StudentLayout = () => {
     const fetchNotifications = async () => {
       try {
         setLoadingNotifications(true);
-        console.log("Fetching notifications for user:", user?._id);
         const res = await api.get("/notifications");
-        console.log("Notifications response:", res.data);
         if (res.data.notifications) {
           setNotifications(res.data.notifications);
         } else {
@@ -34,13 +32,14 @@ const StudentLayout = () => {
       }
     };
 
-    if (user?._id) {
+    const userId = user?.id || user?._id;
+    if (userId) {
       fetchNotifications();
       // Refresh notifications every 30 seconds
       const interval = setInterval(fetchNotifications, 30000);
       return () => clearInterval(interval);
     }
-  }, [user?._id]);
+  }, [user?.id, user?._id]);
 
   const links = [
     { to: "/student", label: "Home", icon: "home" },
@@ -84,7 +83,7 @@ const StudentLayout = () => {
           {/* Notification and Profile */}
           <div className="flex items-center gap-3 sm:gap-6 flex-shrink-0">
             <div className="relative">
-              <button 
+              <button
                 onClick={() => setShowNotifications(!showNotifications)}
                 className="p-2 hover:bg-gray-100 rounded-full relative transition"
               >
@@ -104,7 +103,7 @@ const StudentLayout = () => {
                   <div className="sticky top-0 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200 px-4 py-3">
                     <h3 className="font-bold text-gray-800">Recent Updates</h3>
                   </div>
-                  
+
                   {notifications.length > 0 ? (
                     <div className="divide-y divide-gray-200">
                       {notifications.map((notif) => {
@@ -113,17 +112,15 @@ const StudentLayout = () => {
                           <button
                             key={notif._id}
                             onClick={() => setShowNotifications(false)}
-                            className={`w-full text-left px-4 py-3 hover:bg-blue-50 transition ${
-                              notif.read ? "opacity-60" : "bg-blue-50 font-medium"
-                            }`}
+                            className={`w-full text-left px-4 py-3 hover:bg-blue-50 transition ${notif.read ? "opacity-60" : "bg-blue-50 font-medium"
+                              }`}
                           >
                             <div className="flex items-start gap-3">
-                              <div className={`flex-shrink-0 w-2 h-2 rounded-full mt-2 ${
-                                notif.type === "booking" ? "bg-blue-500" :
-                                notif.type === "message" ? "bg-green-500" :
-                                notif.type === "completed" ? "bg-purple-500" :
-                                "bg-amber-500"
-                              }`}></div>
+                              <div className={`flex-shrink-0 w-2 h-2 rounded-full mt-2 ${notif.type === "booking" ? "bg-blue-500" :
+                                  notif.type === "message" ? "bg-green-500" :
+                                    notif.type === "completed" ? "bg-purple-500" :
+                                      "bg-amber-500"
+                                }`}></div>
                               <div className="flex-1 min-w-0">
                                 <p className="text-sm font-semibold text-gray-800 truncate">{notif.title}</p>
                                 <p className="text-xs text-gray-600 mt-1 line-clamp-2">{notif.message}</p>
@@ -139,9 +136,9 @@ const StudentLayout = () => {
                       <p className="text-gray-500 text-sm">No notifications yet</p>
                     </div>
                   )}
-                  
+
                   <div className="border-t border-gray-200 bg-gray-50 px-4 py-2">
-                    <button 
+                    <button
                       onClick={() => {
                         navigate("/student/notifications");
                         setShowNotifications(false);
@@ -171,7 +168,7 @@ const StudentLayout = () => {
                 <span className="text-xs sm:text-sm font-semibold text-gray-800 truncate">{user?.fullName}</span>
                 <span className="text-xs text-gray-500">Student</span>
               </button>
-              
+
               {/* Profile Dropdown Menu */}
               {showProfileMenu && (
                 <div className="absolute top-full right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 w-48">
@@ -209,11 +206,10 @@ const StudentLayout = () => {
                 <button
                   key={link.to}
                   onClick={() => navigate(link.to)}
-                  className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-lg transition whitespace-nowrap flex-shrink-0 text-xs sm:text-sm ${
-                    isActive
+                  className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-lg transition whitespace-nowrap flex-shrink-0 text-xs sm:text-sm ${isActive
                       ? "bg-blue-100 text-blue-700"
                       : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
-                  }`}
+                    }`}
                 >
                   <span className={isActive ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}>
                     {getIcon(link.icon)}
