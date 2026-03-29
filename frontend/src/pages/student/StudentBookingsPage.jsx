@@ -153,7 +153,7 @@ const StudentBookingsPage = () => {
           filteredBookings.map((booking) => (
             <div
               key={booking._id}
-              className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 hover:shadow-md transition-all duration-300"
+              className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 sm:p-6 hover:shadow-md transition-all duration-300 max-w-2xl"
             >
               <div className="flex items-start justify-between gap-4">
                 {/* Left - Tutor Info */}
