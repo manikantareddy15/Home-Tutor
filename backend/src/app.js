@@ -19,8 +19,8 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 app.use(helmet());
-app.use(cors({ 
-  origin: process.env.CLIENT_URL || "http://localhost:5173", 
+app.use(cors({
+  origin: process.env.CLIENT_URL || ["http://localhost:5173", "http://localhost:5174"],
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
@@ -31,7 +31,7 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 // Serve uploads directory
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
-app.get("/api/health", (_req,res) => res.json({ ok: true }));
+app.get("/api/health", (_req, res) => res.json({ ok: true }));
 app.use("/api/auth", authRoutes);
 app.put("/api/profile", protect, updateProfile);
 app.use("/api/tutors", tutorRoutes);

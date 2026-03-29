@@ -16,7 +16,7 @@ const server = http.createServer(app);
 // Initialize Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: process.env.CLIENT_URL || ["http://localhost:5173", "http://localhost:5174"],
     credentials: true,
     methods: ["GET", "POST"]
   }
@@ -45,7 +45,7 @@ io.on("connection", (socket) => {
     console.log(`User ${userId} identified with socket ${socket.id}`);
   });
 
-// Handle sending messages
+  // Handle sending messages
   socket.on("send_message", (data) => {
     const recipientSocketId = userSockets.get(data.to);
     console.log("Send message event:", {
@@ -54,7 +54,7 @@ io.on("connection", (socket) => {
       recipientSocketId: recipientSocketId,
       availableSockets: Array.from(userSockets.entries())
     });
-    
+
     if (recipientSocketId) {
       io.to(recipientSocketId).emit("new_message", {
         _id: data._id,
@@ -88,7 +88,7 @@ const start = async () => {
   });
 };
 
-start().catch((e) => { 
-  console.error(e); 
-  process.exit(1); 
+start().catch((e) => {
+  console.error(e);
+  process.exit(1);
 });

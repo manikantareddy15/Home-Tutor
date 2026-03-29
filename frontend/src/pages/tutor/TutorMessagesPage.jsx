@@ -7,6 +7,7 @@ import { initSocket, getSocket } from "../../services/socket";
 
 const TutorMessagesPage = () => {
   const { user } = useAuth();
+  const userId = user?.id || user?._id;
   const [searchParams] = useSearchParams();
   const [searchName, setSearchName] = useState("");
   const [withUser, setWithUser] = useState("");
@@ -18,7 +19,20 @@ const TutorMessagesPage = () => {
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [conversations, setConversations] = useState([]);
+  const [menuOpenId, setMenuOpenId] = useState(null);
   const messagesEndRef = useRef(null);
+  const menuRef = useRef(null);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handler = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpenId(null);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   // Load available students on mount
   useEffect(() => {
@@ -27,18 +41,18 @@ const TutorMessagesPage = () => {
         // Fetch all bookings to get students
         const res = await api.get("/bookings");
         const bookings = res.data.bookings || [];
-        
+
         // Extract unique students from bookings
         const uniqueStudents = [];
         const seenIds = new Set();
-        
+
         for (const booking of bookings) {
           if (booking.student && !seenIds.has(booking.student._id)) {
             seenIds.add(booking.student._id);
             uniqueStudents.push(booking.student);
           }
         }
-        
+
         setStudents(uniqueStudents);
       } catch (err) {
         console.error("Failed to load students:", err);
@@ -60,7 +74,7 @@ const TutorMessagesPage = () => {
       }
     };
     loadConversations();
-    
+
     // Refresh conversations every 30 seconds to show latest messages
     const interval = setInterval(loadConversations, 30000);
     return () => clearInterval(interval);
@@ -70,8 +84,8 @@ const TutorMessagesPage = () => {
   useEffect(() => {
     const token = sessionStorage.getItem("hometutor_token");
     if (token && user?._id) {
-      console.log("Initializing socket for user:", user._id);
-      const socket = initSocket(token, user._id);
+      console.log("Initializing socket for user:", userId);
+      const socket = initSocket(token, userId);
 
       // Listen for new messages
       const handleNewMessage = (message) => {
@@ -90,12 +104,12 @@ const TutorMessagesPage = () => {
         socket.off("new_message", handleNewMessage);
       };
     }
-  }, [user?._id]);
+  }, [userId]);
 
   // Auto-populate from URL params
   useEffect(() => {
     const studentId = searchParams.get("student");
-    
+
     if (studentId) {
       // Find student by ID and set search name
       const student = students.find(s => s._id === studentId);
@@ -147,11 +161,11 @@ const TutorMessagesPage = () => {
       try {
         // Try to get student info from message data
         const senderInfo = data.messages?.[0]?.from;
-        if (senderInfo && String(senderInfo._id) !== String(user?._id)) {
+        if (senderInfo && String(senderInfo._id) !== String(userId)) {
           setRecipientInfo(senderInfo);
         } else {
           const receiverInfo = data.messages?.[0]?.to;
-          if (receiverInfo && String(receiverInfo._id) !== String(user?._id)) {
+          if (receiverInfo && String(receiverInfo._id) !== String(userId)) {
             setRecipientInfo(receiverInfo);
           }
         }
@@ -177,13 +191,13 @@ const TutorMessagesPage = () => {
     }
     try {
       const response = await api.post("/messages", { to: withUser, content });
-      
+
       // Add message to local state
       const newMessage = {
         ...response.data.message,
         _id: response.data.message._id || new Date().getTime(),
         from: {
-          _id: user._id,
+          _id: userId,
           fullName: user.fullName,
           email: user.email
         }
@@ -196,7 +210,7 @@ const TutorMessagesPage = () => {
         socket.emit("send_message", {
           to: withUser,
           from: {
-            _id: user._id,
+            _id: userId,
             fullName: user.fullName,
             email: user.email
           },
@@ -237,7 +251,7 @@ const TutorMessagesPage = () => {
         {/* Header */}
         <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
           <h1 className="text-2xl font-bold text-gray-800 mb-3">Messages</h1>
-          
+
           {/* Search */}
           <div className="relative">
             <input
@@ -247,7 +261,7 @@ const TutorMessagesPage = () => {
               onChange={(e) => setSearchName(e.target.value)}
               className="w-full px-4 py-2.5 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 placeholder-gray-500 text-sm"
             />
-            
+
             {/* Dropdown List */}
             {showDropdown && filteredStudents.length > 0 && (
               <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
@@ -293,9 +307,8 @@ const TutorMessagesPage = () => {
                   loadMessages(conv._id);
                   setShowDropdown(false);
                 }}
-                className={`w-full px-3 py-3 border-b border-gray-100 transition hover:bg-gray-50 text-left ${
-                  withUser === conv._id ? "bg-blue-50 border-l-4 border-l-blue-500" : ""
-                }`}
+                className={`w-full px-3 py-3 border-b border-gray-100 transition hover:bg-gray-50 text-left ${withUser === conv._id ? "bg-blue-50 border-l-4 border-l-blue-500" : ""
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-full bg-green-200 flex items-center justify-center text-green-600 font-bold flex-shrink-0">
@@ -343,36 +356,67 @@ const TutorMessagesPage = () => {
               ) : (
                 <>
                   {messages.map((m, index) => {
-                    const isOwn = m.from?._id === user?._id;
+                    const isOwn = String(m.from?._id) === String(userId);
                     const showName = !isOwn && (index === 0 || messages[index - 1]?.from?._id !== m.from?._id);
-                    
+
                     return (
-                      <div key={m._id} className={`flex ${isOwn ? "justify-end" : "justify-start"} mb-3`}>
+                      <div key={m._id} className={`flex ${isOwn ? "justify-end" : "justify-start"} mb-3 group`}>
                         <div className={`flex flex-col ${isOwn ? "items-end" : "items-start"}`}>
                           {showName && !isOwn && (
                             <p className="text-xs text-gray-600 font-semibold mb-1 ml-2">
                               {m.from?.fullName || "User"}
                             </p>
                           )}
-                          <div
-                            className={`px-4 py-2.5 rounded-2xl max-w-xs lg:max-w-md shadow-sm transition-all ${
-                              isOwn
+                          <div className={`flex items-center gap-1 ${isOwn ? "flex-row-reverse" : "flex-row"}`}>
+                            {/* 3-dot menu */}
+                            <div className="relative flex-shrink-0" ref={menuOpenId === m._id ? menuRef : null}>
+                              <button
+                                onClick={() => setMenuOpenId(menuOpenId === m._id ? null : m._id)}
+                                className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-gray-600 p-0.5"
+                              >
+                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                  <path d="M10 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4z" />
+                                </svg>
+                              </button>
+                              {menuOpenId === m._id && (
+                                <div className={`absolute ${isOwn ? "right-0" : "left-0"} bottom-6 bg-white border border-gray-200 rounded-lg shadow-xl z-30 py-1 min-w-[120px]`}>
+                                  <button
+                                    onClick={() => { navigator.clipboard.writeText(m.content); toast.success("Copied!"); setMenuOpenId(null); }}
+                                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 transition"
+                                  >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                                    Copy
+                                  </button>
+                                  {isOwn && (
+                                    <button
+                                      onClick={async () => { try { await api.delete(`/messages/${m._id}`); setMessages((prev) => prev.filter((msg) => msg._id !== m._id)); toast.success("Deleted"); } catch { toast.error("Failed to delete"); } setMenuOpenId(null); }}
+                                      className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-500 hover:bg-red-50 transition"
+                                    >
+                                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                      Delete
+                                    </button>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                            <div
+                              className={`px-4 py-2.5 rounded-2xl max-w-xs lg:max-w-md shadow-sm transition-all ${isOwn
                                 ? "bg-blue-600 text-white rounded-br-none"
                                 : "bg-gray-200 text-gray-900 rounded-bl-none"
-                            }`}
-                          >
-                            <p className="text-sm break-words leading-relaxed">{m.content}</p>
+                                }`}
+                            >
+                              <p className="text-sm break-words leading-relaxed">{m.content}</p>
+                            </div>
                           </div>
                           <p
-                            className={`text-xs mt-1 px-2 ${
-                              isOwn ? "text-gray-500" : "text-gray-600"
-                            }`}
+                            className={`text-xs mt-1 px-2 ${isOwn ? "text-gray-500" : "text-gray-600"
+                              }`}
                           >
                             {m.createdAt
                               ? new Date(m.createdAt).toLocaleTimeString([], {
-                                  hour: "2-digit",
-                                  minute: "2-digit"
-                                })
+                                hour: "2-digit",
+                                minute: "2-digit"
+                              })
                               : ""}
                           </p>
                         </div>
@@ -401,7 +445,7 @@ const TutorMessagesPage = () => {
                   className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 h-fit"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
                   </svg>
                   <span className="hidden sm:inline">Send</span>
                 </button>
