@@ -114,7 +114,7 @@ const TutorMessagesPage = () => {
       // Find student by ID and set search name
       const student = students.find(s => s._id === studentId);
       if (student) {
-        setSearchName(student.fullName);
+        setSearchName("");
         setWithUser(studentId);
         loadMessages(studentId);
       }
@@ -136,7 +136,7 @@ const TutorMessagesPage = () => {
   }, [searchName, students]);
 
   const handleSelectStudent = (student) => {
-    setSearchName(student.fullName);
+    setSearchName("");
     setWithUser(student._id);
     setShowDropdown(false);
     loadMessages(student._id);
@@ -303,7 +303,7 @@ const TutorMessagesPage = () => {
                 key={conv._id}
                 onClick={() => {
                   setWithUser(conv._id);
-                  setSearchName(conv.otherUser?.fullName || "");
+                  setSearchName("");
                   loadMessages(conv._id);
                   setShowDropdown(false);
                 }}
