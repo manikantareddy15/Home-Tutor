@@ -80,7 +80,7 @@ const StudentMessagesPage = () => {
     const tutorId = searchParams.get("tutor") || searchParams.get("student");
     if (tutorId) {
       const t = tutors.find((x) => x._id === tutorId);
-      if (t) { setSearchName(t.fullName); setWithUser(tutorId); loadMessages(tutorId); }
+      if (t) { setSearchName(""); setWithUser(tutorId); loadMessages(tutorId); }
     }
   }, [searchParams, tutors]);
 
@@ -199,7 +199,7 @@ const StudentMessagesPage = () => {
               {filteredTutors.map((t) => (
                 <button
                   key={t._id}
-                  onClick={() => { setSearchName(t.fullName); setWithUser(t._id); setShowDropdown(false); loadMessages(t._id); }}
+                  onClick={() => { setSearchName(""); setWithUser(t._id); setShowDropdown(false); loadMessages(t._id); }}
                   className="w-full flex items-center gap-3 px-3 py-3 hover:bg-blue-50 transition text-left border-b border-gray-50 last:border-0"
                 >
                   <div className="w-9 h-9 rounded-full bg-blue-100 text-blue-600 font-bold flex items-center justify-center text-sm flex-shrink-0">
@@ -229,7 +229,7 @@ const StudentMessagesPage = () => {
             conversations.map((conv) => (
               <button
                 key={conv._id}
-                onClick={() => { setWithUser(conv._id); setSearchName(conv.otherUser?.fullName || ""); loadMessages(conv._id); setShowDropdown(false); }}
+                onClick={() => { setWithUser(conv._id); setSearchName(""); loadMessages(conv._id); setShowDropdown(false); }}
                 className={`w-full flex items-center gap-3 px-4 py-3.5 border-b border-gray-50 hover:bg-gray-50 transition text-left ${withUser === conv._id ? "bg-blue-50" : ""}`}
               >
                 {/* Avatar */}
