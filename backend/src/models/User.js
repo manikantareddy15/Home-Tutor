@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
   isApproved: { type: Boolean, default: false },
   isActive: { type: Boolean, default: true },
   bio: { type: String, default: "" },
+  aboutMe: { type: String, default: "" },
   cert11th: { type: String, default: "" },
   cert12th: { type: String, default: "" },
   certGraduation: { type: String, default: "" }

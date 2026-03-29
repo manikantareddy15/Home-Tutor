@@ -15,6 +15,7 @@ const sanitize = (u) => ({
   rating: u.rating,
   isApproved: u.isApproved,
   bio: u.bio,
+  aboutMe: u.aboutMe,
   cert11th: u.cert11th,
   cert12th: u.cert12th,
   certGraduation: u.certGraduation
@@ -147,5 +148,28 @@ export const me = async (req, res) => {
     res.json({ user: sanitize(req.user) });
   } catch (err) {
     res.status(500).json({ message: err.message || "Error fetching user" });
+  }
+};
+
+export const updateProfile = async (req, res) => {
+  try {
+    const { fullName, email, password, aboutMe, subjects } = req.body;
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update profile fields
+    if (fullName) user.fullName = fullName;
+    if (email) user.email = email;
+    if (password) user.password = password; // Password will be hashed by pre-save hook
+    if (aboutMe !== undefined) user.aboutMe = aboutMe;
+    if (subjects) user.subjects = subjects;
+
+    await user.save();
+    res.json({ user: sanitize(user), message: "Profile updated successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message || "Error updating profile" });
   }
 };

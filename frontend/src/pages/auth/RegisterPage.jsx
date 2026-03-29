@@ -38,10 +38,10 @@ const RegisterPage = () => {
           formData.append("subjects", JSON.stringify(form.subjects));
         }
         if (form.experienceYears) {
-          formData.append("experienceYears", form.experienceYears);
+          formData.append("experienceYears", Number(form.experienceYears));
         }
         if (form.hourlyRate) {
-          formData.append("hourlyRate", form.hourlyRate);
+          formData.append("hourlyRate", Number(form.hourlyRate));
         }
         if (form.teachingModes.length > 0) {
           formData.append("teachingModes", JSON.stringify(form.teachingModes));
@@ -66,7 +66,7 @@ const RegisterPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4 py-8">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl overflow-hidden max-h-[90vh] grid grid-cols-1 md:grid-cols-2">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl overflow-hidden h-[90vh] grid grid-cols-1 md:grid-cols-2">
         {/* Left Side - Welcome Section */}
         <div className="bg-gradient-to-br from-blue-400 to-indigo-500 p-8 md:p-12 hidden md:flex flex-col justify-start items-center text-white overflow-y-auto">
           <div className="text-center my-8">
@@ -152,10 +152,10 @@ const RegisterPage = () => {
         </div>
 
         {/* Right Side - Registration Form */}
-        <div className="p-8 md:p-12 overflow-y-auto flex flex-col">
-          <h2 className="text-3xl font-bold text-gray-800 mb-8">Create Account</h2>
+        <div className="p-8 md:p-12 flex flex-col h-full overflow-hidden">
+          <h2 className="text-3xl font-bold text-gray-800 mb-8 flex-shrink-0">Create Account</h2>
 
-          <form onSubmit={submit} className="space-y-4 pb-4">
+          <form onSubmit={submit} className="flex-1 overflow-y-auto pr-2 space-y-4 pb-4">
             {/* Full Name */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -292,15 +292,15 @@ const RegisterPage = () => {
                 {/* Hourly Rate */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Hourly Rate ($)
+                    Hourly Rate (₹)
                   </label>
                   <input
                     type="number"
-                    placeholder="e.g., 50"
+                    placeholder="e.g., 500"
                     value={form.hourlyRate}
                     onChange={(e) => setForm({ ...form, hourlyRate: e.target.value })}
                     min="0"
-                    step="5"
+                    step="10"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-gray-700 placeholder-gray-400"
                   />
                 </div>

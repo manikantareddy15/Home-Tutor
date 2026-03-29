@@ -10,6 +10,8 @@ import messageRoutes from "./routes/message.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import { notFound, errorHandler } from "./middleware/error.middleware.js";
+import { protect } from "./middleware/auth.middleware.js";
+import { updateProfile } from "./controllers/auth.controller.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,6 +33,7 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.get("/api/health", (_req,res) => res.json({ ok: true }));
 app.use("/api/auth", authRoutes);
+app.put("/api/profile", protect, updateProfile);
 app.use("/api/tutors", tutorRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/messages", messageRoutes);

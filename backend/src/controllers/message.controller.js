@@ -114,11 +114,29 @@ export const getConversationsList = async (req, res) => {
           from: "users",
           localField: "_id",
           foreignField: "_id",
-          as: "user"
+          as: "otherUser"
         }
       },
       {
-        $unwind: "$user"
+        $unwind: "$otherUser"
+      },
+      {
+        $project: {
+          _id: 1,
+          otherUser: {
+            _id: "$otherUser._id",
+            fullName: "$otherUser.fullName",
+            email: "$otherUser.email"
+          },
+          lastMessage: "$lastMessage.content",
+          lastMessageTime: {
+            $dateToString: {
+              format: "%H:%M",
+              date: "$createdAt"
+            }
+          },
+          createdAt: 1
+        }
       }
     ]);
 

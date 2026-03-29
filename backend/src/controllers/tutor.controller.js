@@ -72,17 +72,19 @@ export const updateTutorProfile = async (req, res) => {
       return res.status(403).json({ message: "Only tutors can update their profile" });
     }
 
-    const { subjects, experienceYears, hourlyRate, bio } = req.body;
+    const { fullName, email, password, aboutMe, subjects } = req.body;
     const tutor = await User.findById(req.user._id);
 
     if (!tutor) {
       return res.status(404).json({ message: "Tutor not found" });
     }
 
+    // Update profile fields
+    if (fullName) tutor.fullName = fullName;
+    if (email) tutor.email = email;
+    if (password) tutor.password = password; // Password will be hashed by pre-save hook
+    if (aboutMe !== undefined) tutor.aboutMe = aboutMe;
     if (subjects) tutor.subjects = subjects;
-    if (experienceYears !== undefined) tutor.experienceYears = experienceYears;
-    if (hourlyRate !== undefined) tutor.hourlyRate = hourlyRate;
-    if (bio !== undefined) tutor.bio = bio;
 
     await tutor.save();
     res.json({ tutor, message: "Profile updated successfully" });

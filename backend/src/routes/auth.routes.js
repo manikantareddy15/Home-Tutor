@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { register, login, adminLogin, me } from "../controllers/auth.controller.js";
+import { register, login, adminLogin, me, updateProfile } from "../controllers/auth.controller.js";
 import { protect } from "../middleware/auth.middleware.js";
 import upload from "../config/multer.js";
 
@@ -14,5 +14,6 @@ router.post("/register", upload.fields([
 router.post("/login", login);
 router.post("/admin/login", adminLogin);
 router.get("/me", protect, me);
+router.put("/profile", protect, updateProfile);
 
 export default router;

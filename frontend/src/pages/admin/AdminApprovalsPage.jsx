@@ -146,7 +146,7 @@ const AdminApprovalsPage = () => {
 
                   {/* Price */}
                   <td className="px-4 sm:px-6 py-4">
-                    <span className="font-semibold text-green-600">${tutor.hourlyRate || 0}/hr</span>
+                    <span className="font-semibold text-green-600">₹{tutor.hourlyRate || 0}/hr</span>
                   </td>
 
                   {/* View Documents Button */}
@@ -240,7 +240,7 @@ const AdminApprovalsPage = () => {
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Hourly Rate</p>
-                  <p className="font-medium text-gray-800">${selectedTutor.hourlyRate || 0}/hr</p>
+                  <p className="font-medium text-gray-800">₹{selectedTutor.hourlyRate || 0}/hr</p>
                 </div>
               </div>
 

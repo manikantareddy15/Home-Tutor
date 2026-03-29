@@ -8,6 +8,7 @@ import AdminLayout from "../layouts/AdminLayout";
 import StudentHomePage from "../pages/student/StudentHomePage";
 import FindTutorsPage from "../pages/student/FindTutorsPage";
 import TutorProfilePage from "../pages/student/TutorProfilePage";
+import StudentProfilePage from "../pages/student/StudentProfilePage";
 import StudentBookingsPage from "../pages/student/StudentBookingsPage";
 import StudentMessagesPage from "../pages/student/StudentMessagesPage";
 import TutorDashboardPage from "../pages/tutor/TutorDashboardPage";
@@ -16,6 +17,7 @@ import TutorRequestsPage from "../pages/tutor/TutorRequestsPage";
 import TutorEarningsPage from "../pages/tutor/TutorEarningsPage";
 import TutorHistoryPage from "../pages/tutor/TutorHistoryPage";
 import TutorMessagesPage from "../pages/tutor/TutorMessagesPage";
+import TutorEditProfilePage from "../pages/tutor/TutorProfilePage";
 import AdminDashboardPage from "../pages/admin/AdminDashboardPage";
 import AdminTutorsPage from "../pages/admin/AdminTutorsPage";
 import AdminStudentsPage from "../pages/admin/AdminStudentsPage";
@@ -32,6 +34,7 @@ const AppRoutes = () => (
       <Route index element={<StudentHomePage />} />
       <Route path="find-tutors" element={<FindTutorsPage />} />
       <Route path="tutor/:id" element={<TutorProfilePage />} />
+      <Route path="profile" element={<StudentProfilePage />} />
       <Route path="bookings" element={<StudentBookingsPage />} />
       <Route path="messages" element={<StudentMessagesPage />} />
       <Route path="notifications" element={<NotificationsPage />} />
@@ -43,6 +46,7 @@ const AppRoutes = () => (
       <Route path="earnings" element={<TutorEarningsPage />} />
       <Route path="history" element={<TutorHistoryPage />} />
       <Route path="messages" element={<TutorMessagesPage />} />
+      <Route path="profile" element={<TutorEditProfilePage />} />
       <Route path="notifications" element={<NotificationsPage />} />
     </Route>
     <Route path="/admin" element={<ProtectedRoute role="admin"><AdminLayout /></ProtectedRoute>}>
