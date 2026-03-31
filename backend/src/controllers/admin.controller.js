@@ -1,3 +1,15 @@
+// Get all student-tutor requests (bookings)
+export const getRequests = async (req, res) => {
+  try {
+    const requests = await Booking.find({ status: { $ne: "completed" } })
+      .sort({ createdAt: -1 })
+      .populate("student", "fullName email profilePicture")
+      .populate("tutor", "fullName email profilePicture");
+    res.status(200).json({ requests });
+  } catch (err) {
+    res.status(500).json({ message: err.message || "Error fetching requests" });
+  }
+};
 import { User } from "../models/User.js";
 import { Booking } from "../models/Booking.js";
 import { ROLES } from "../utils/constants.js";

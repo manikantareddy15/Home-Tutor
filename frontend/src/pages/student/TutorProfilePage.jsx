@@ -150,10 +150,14 @@ const TutorProfilePage = () => {
             <div className="bg-white rounded-2xl shadow-md p-8">
               {/* Avatar */}
               <div className="flex justify-center mb-6">
-                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-200 to-blue-300 flex items-center justify-center border-4 border-blue-400 shadow-lg flex-shrink-0">
-                  <span className="text-white text-5xl font-bold">
-                    {tutor.fullName?.charAt(0).toUpperCase()}
-                  </span>
+                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-200 to-blue-300 flex items-center justify-center border-4 border-blue-400 shadow-lg flex-shrink-0 overflow-hidden">
+                  {tutor.profilePicture ? (
+                    <img src={tutor.profilePicture} alt="Profile" className="w-full h-full object-cover"/>
+                  ) : (
+                    <svg className="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                  )}
                 </div>
               </div>
 

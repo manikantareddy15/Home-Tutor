@@ -114,10 +114,18 @@ const AdminApprovalsPage = () => {
                   {/* Name */}
                   <td className="px-4 sm:px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-purple-200 flex items-center justify-center flex-shrink-0">
-                        <span className="text-purple-600 font-bold text-xs">
-                          {tutor.fullName?.charAt(0).toUpperCase()}
-                        </span>
+                      <div className="w-8 h-8 rounded-full bg-purple-200 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                        {tutor.profilePicture ? (
+                          <img
+                            src={tutor.profilePicture}
+                            alt="Tutor"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <svg className="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                          </svg>
+                        )}
                       </div>
                       <span className="font-medium text-gray-800 truncate">{tutor.fullName}</span>
                     </div>

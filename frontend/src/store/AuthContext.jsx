@@ -17,8 +17,12 @@ export const AuthProvider = ({ children }) => {
     setUser(data.user);
     return data.user;
   };
+  const updateUser = (updatedUser) => {
+    sessionStorage.setItem("hometutor_user", JSON.stringify(updatedUser));
+    setUser(updatedUser);
+  };
   const logout = () => { sessionStorage.removeItem("hometutor_token"); sessionStorage.removeItem("hometutor_user"); setUser(null); };
-  const value = useMemo(() => ({ user, login, register, logout }), [user]);
+  const value = useMemo(() => ({ user, login, register, updateUser, logout }), [user]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 export const useAuth = () => useContext(AuthContext);

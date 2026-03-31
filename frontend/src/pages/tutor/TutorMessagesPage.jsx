@@ -271,8 +271,14 @@ const TutorMessagesPage = () => {
                     onClick={() => handleSelectStudent(student)}
                     className="w-full px-4 py-3 text-left hover:bg-blue-50 border-b border-gray-100 last:border-b-0 flex items-center gap-3 transition"
                   >
-                    <div className="w-10 h-10 rounded-full bg-green-200 flex items-center justify-center text-green-600 font-bold flex-shrink-0">
-                      {student.fullName?.charAt(0) || "S"}
+                    <div className="w-10 h-10 rounded-full bg-green-200 flex items-center justify-center text-green-600 font-bold flex-shrink-0 overflow-hidden">
+                      {student.profilePicture ? (
+                        <img src={student.profilePicture} alt="Profile" className="w-full h-full object-cover"/>
+                      ) : (
+                        <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-gray-800 truncate text-sm">{student.fullName}</p>
@@ -311,8 +317,14 @@ const TutorMessagesPage = () => {
                   }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-green-200 flex items-center justify-center text-green-600 font-bold flex-shrink-0">
-                    {conv.otherUser?.fullName?.charAt(0) || "S"}
+                  <div className="w-12 h-12 rounded-full bg-green-200 flex items-center justify-center text-green-600 font-bold flex-shrink-0 overflow-hidden">
+                    {conv.otherUser?.profilePicture ? (
+                      <img src={conv.otherUser.profilePicture} alt="Profile" className="w-full h-full object-cover"/>
+                    ) : (
+                      <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                      </svg>
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-gray-800 truncate text-sm">{conv.otherUser?.fullName}</p>
@@ -332,8 +344,14 @@ const TutorMessagesPage = () => {
           <>
             {/* Chat Header */}
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200 p-4 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-green-200 flex items-center justify-center text-green-600 font-bold">
-                {recipientInfo?.fullName?.charAt(0) || "S"}
+              <div className="w-10 h-10 rounded-full bg-green-200 flex items-center justify-center text-green-600 font-bold overflow-hidden">
+                {recipientInfo?.profilePicture ? (
+                  <img src={recipientInfo.profilePicture} alt="Profile" className="w-full h-full object-cover"/>
+                ) : (
+                  <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                  </svg>
+                )}
               </div>
               <div className="flex-1">
                 <p className="font-semibold text-gray-800">{recipientInfo?.fullName}</p>

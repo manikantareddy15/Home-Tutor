@@ -88,10 +88,18 @@ const TutorRequestsPage = () => {
                     {/* Student Card */}
                     <div className="bg-white rounded-xl p-4 mb-4">
                       <div className="flex items-center gap-3 mb-4">
-                        <div className="w-12 h-12 rounded-full bg-blue-400 flex items-center justify-center">
-                          <span className="text-white text-lg font-bold">
-                            {booking.student?.fullName?.charAt(0).toUpperCase() || "S"}
-                          </span>
+                        <div className="w-12 h-12 rounded-full bg-blue-400 flex items-center justify-center overflow-hidden">
+                          {booking.student?.profilePicture ? (
+                            <img
+                              src={booking.student.profilePicture}
+                              alt="Student"
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>
+                          )}
                         </div>
                         <div>
                           <p className="font-bold text-gray-800">{booking.student?.fullName || "Unknown"}</p>
@@ -137,7 +145,7 @@ const TutorRequestsPage = () => {
                             }) : "N/A"}
                           </p>
                           <p className="text-sm text-gray-700">
-                            ⏰ {booking.sessionTime || "N/A"}
+                            {booking.sessionTime || "N/A"}
                           </p>
                         </div>
                       </div>
@@ -190,7 +198,6 @@ const TutorRequestsPage = () => {
                         onClick={() => handleMessageStudent(booking.student?._id)}
                         className="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition flex items-center justify-center gap-2"
                       >
-                        <span>💬</span>
                         Message
                       </button>
                       <div className="flex gap-3">

@@ -1,2 +1,2 @@
-import AdminSessionsPage from "./AdminSessionsPage";
-export default AdminSessionsPage;
+import AdminRequestsPage from "./AdminRequestsPage";
+export default AdminRequestsPage;

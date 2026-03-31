@@ -30,13 +30,16 @@ const upload = multer({
       'application/pdf',
       'image/jpeg',
       'image/png',
+      'image/jpg',
+      'image/gif',
+      'image/webp',
       'application/msword',
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     ];
     if (allowedMimes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Only PDF, JPG, PNG, and DOC files are allowed'));
+      cb(new Error('Only PDF, JPG, PNG, GIF, WebP, and DOC files are allowed'));
     }
   }
 });

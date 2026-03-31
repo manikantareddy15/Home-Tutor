@@ -161,8 +161,18 @@ const StudentBookingsPage = () => {
               <div className="flex items-center justify-between gap-4">
                 {/* Left — Avatar + Tutor name + details */}
                 <div className="flex items-center gap-4 min-w-0">
-                  <div className="w-11 h-11 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-base flex-shrink-0 border border-blue-200">
-                    {booking.tutor?.fullName?.charAt(0)?.toUpperCase() || "T"}
+                  <div className="w-11 h-11 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-base flex-shrink-0 border border-blue-200 overflow-hidden">
+                    {booking.tutor?.profilePicture ? (
+                      <img
+                        src={booking.tutor.profilePicture}
+                        alt="Tutor"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                      </svg>
+                    )}
                   </div>
                   <div className="min-w-0">
                     <p className="font-semibold text-gray-800 text-sm truncate">{booking.tutor?.fullName}</p>

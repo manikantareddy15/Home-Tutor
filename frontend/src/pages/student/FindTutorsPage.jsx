@@ -247,10 +247,14 @@ const FindTutorsPage = () => {
                 <div key={tutor._id} className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition transform hover:scale-105 p-4">
                   {/* Avatar and Basic Info */}
                   <div className="flex flex-col items-center text-center mb-3">
-                    <div className="w-16 h-16 rounded-full bg-blue-400 flex items-center justify-center mb-2 shadow-md">
-                      <span className="text-white text-xl font-bold">
-                        {tutor.fullName?.charAt(0).toUpperCase()}
-                      </span>
+                    <div className="w-16 h-16 rounded-full bg-blue-400 flex items-center justify-center mb-2 shadow-md overflow-hidden">
+                      {tutor.profilePicture ? (
+                        <img src={tutor.profilePicture} alt="Profile" className="w-full h-full object-cover"/>
+                      ) : (
+                        <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                      )}
                     </div>
                     <h3 className="text-base font-bold text-gray-800 line-clamp-2">{tutor.fullName}</h3>
                     

@@ -172,8 +172,14 @@ const StudentMessagesPage = () => {
         {/* Sidebar Header */}
         <div className="bg-blue-50 px-4 py-3 flex items-center justify-between border-b border-blue-100">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 font-bold text-sm">
-              {user?.fullName?.charAt(0)?.toUpperCase() || "U"}
+            <div className="w-9 h-9 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 font-bold text-sm overflow-hidden flex-shrink-0">
+              {user?.profilePicture ? (
+                <img src={user.profilePicture} alt="Profile" className="w-full h-full object-cover"/>
+              ) : (
+                <svg className="w-5 h-5 text-blue-700" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+              )}
             </div>
             <span className="text-blue-800 font-semibold text-base">Chats</span>
           </div>
@@ -202,8 +208,14 @@ const StudentMessagesPage = () => {
                   onClick={() => { setSearchName(""); setWithUser(t._id); setShowDropdown(false); loadMessages(t._id); }}
                   className="w-full flex items-center gap-3 px-3 py-3 hover:bg-blue-50 transition text-left border-b border-gray-50 last:border-0"
                 >
-                  <div className="w-9 h-9 rounded-full bg-blue-100 text-blue-600 font-bold flex items-center justify-center text-sm flex-shrink-0">
-                    {t.fullName?.charAt(0)?.toUpperCase()}
+                  <div className="w-9 h-9 rounded-full bg-blue-100 text-blue-600 font-bold flex items-center justify-center text-sm flex-shrink-0 overflow-hidden">
+                    {t.profilePicture ? (
+                      <img src={t.profilePicture} alt="Profile" className="w-full h-full object-cover"/>
+                    ) : (
+                      <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                      </svg>
+                    )}
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-gray-800 truncate">{t.fullName}</p>
@@ -233,8 +245,14 @@ const StudentMessagesPage = () => {
                 className={`w-full flex items-center gap-3 px-4 py-3.5 border-b border-gray-50 hover:bg-gray-50 transition text-left ${withUser === conv._id ? "bg-blue-50" : ""}`}
               >
                 {/* Avatar */}
-                <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-base flex-shrink-0">
-                  {conv.otherUser?.fullName?.charAt(0)?.toUpperCase() || "T"}
+                <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-base flex-shrink-0 overflow-hidden">
+                  {conv.otherUser?.profilePicture ? (
+                    <img src={conv.otherUser.profilePicture} alt="Profile" className="w-full h-full object-cover"/>
+                  ) : (
+                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                  )}
                 </div>
                 {/* Info */}
                 <div className="flex-1 min-w-0">
@@ -256,8 +274,14 @@ const StudentMessagesPage = () => {
           <>
             {/* Chat Header — light blue bar (no search icon) */}
             <div className="bg-blue-50 border-b border-blue-100 px-4 py-3 flex items-center gap-3 flex-shrink-0 shadow-sm">
-              <div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 font-bold text-base">
-                {recipientInfo?.fullName?.charAt(0)?.toUpperCase() || "T"}
+              <div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 font-bold text-base overflow-hidden">
+                {recipientInfo?.profilePicture ? (
+                  <img src={recipientInfo.profilePicture} alt="Profile" className="w-full h-full object-cover"/>
+                ) : (
+                  <svg className="w-5 h-5 text-blue-700" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                  </svg>
+                )}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-gray-800 text-sm truncate">{recipientInfo?.fullName || searchName || "Chat"}</p>
@@ -290,21 +314,23 @@ const StudentMessagesPage = () => {
                       const prevSame = i > 0 && String(dayMsgs[i - 1].from?._id) === String(m.from?._id);
                       return (
                         <div key={m._id} className={`flex ${isOwn ? "justify-end" : "justify-start"} group ${prevSame ? "mt-0.5" : "mt-3"}`}>
-
                           {/* Avatar — left side for received, only first in group */}
                           {!isOwn && !prevSame && (
-                            <div className="w-7 h-7 rounded-full bg-blue-400 text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mr-1.5 mt-auto mb-1">
-                              {m.from?.fullName?.charAt(0)?.toUpperCase() || "T"}
+                            <div className="w-7 h-7 rounded-full bg-blue-400 text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mr-1.5 mt-auto mb-1 overflow-hidden">
+                              {m.from?.profilePicture ? (
+                                <img src={m.from.profilePicture} alt="Profile" className="w-full h-full object-cover"/>
+                              ) : (
+                                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                </svg>
+                              )}
                             </div>
                           )}
                           {!isOwn && prevSame && <div className="w-7 mr-1.5 flex-shrink-0" />}
-
                           {/* Bubble column */}
                           <div className={`flex flex-col ${isOwn ? "items-end" : "items-start"} max-w-xs lg:max-w-sm xl:max-w-md`}>
-
                             {/* Bubble row: bubble + 3-dot menu */}
                             <div className={`flex items-center gap-1 ${isOwn ? "flex-row-reverse" : "flex-row"}`}>
-
                               {/* 3-dot menu — shows on hover */}
                               <div className="relative flex-shrink-0" ref={menuOpenId === m._id ? menuRef : null}>
                                 <button
@@ -336,14 +362,12 @@ const StudentMessagesPage = () => {
                                   </div>
                                 )}
                               </div>
-
                               {/* Bubble */}
                               <div className={`relative px-3 py-2 rounded-2xl shadow-sm text-sm leading-relaxed break-words ${isOwn
                                 ? "bg-blue-600 text-white rounded-br-none"
                                 : "bg-white text-gray-800 rounded-bl-none border border-gray-100"
                                 }`}>
                                 {m.content}
-
                                 {/* Tail: SVG triangle — blue for sent, white for received */}
                                 {isOwn ? (
                                   <svg className="absolute -bottom-0 -right-2 w-3 h-3 text-blue-600" viewBox="0 0 10 10" fill="currentColor">
@@ -356,7 +380,6 @@ const StudentMessagesPage = () => {
                                 )}
                               </div>
                             </div>
-
                             {/* Timestamp */}
                             <p className="text-[10px] mt-1 px-1 text-gray-400">
                               {fmtTime(m.createdAt)}

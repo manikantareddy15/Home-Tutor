@@ -254,8 +254,14 @@ const StudentHomePage = () => {
               >
                 <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4 justify-between">
                   <div className="flex items-start gap-3 sm:gap-4 flex-1">
-                    <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-blue-200 flex items-center justify-center text-blue-600 font-bold text-base sm:text-lg flex-shrink-0">
-                      {booking.tutor?.fullName?.charAt(0) || "T"}
+                    <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-blue-200 flex items-center justify-center text-blue-600 font-bold text-base sm:text-lg flex-shrink-0 overflow-hidden">
+                      {booking.tutor?.profilePicture ? (
+                        <img src={booking.tutor.profilePicture} alt="Profile" className="w-full h-full object-cover"/>
+                      ) : (
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-gray-800 font-semibold truncate text-sm sm:text-base">{booking.tutor?.fullName}</p>
@@ -359,8 +365,14 @@ const StudentHomePage = () => {
                   key={booking._id}
                   className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 p-4 sm:p-5 border-l-4 border-l-blue-500 border border-gray-200 rounded-lg bg-gray-50 hover:bg-blue-50 hover:shadow-md transition-all duration-300"
                 >
-                  <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-blue-200 flex items-center justify-center text-blue-600 font-bold text-base sm:text-lg flex-shrink-0">
-                    {booking.tutor?.fullName?.charAt(0) || "T"}
+                  <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-blue-200 flex items-center justify-center text-blue-600 font-bold text-base sm:text-lg flex-shrink-0 overflow-hidden">
+                    {booking.tutor?.profilePicture ? (
+                      <img src={booking.tutor.profilePicture} alt="Profile" className="w-full h-full object-cover"/>
+                    ) : (
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                      </svg>
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2 mb-2">

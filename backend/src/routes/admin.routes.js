@@ -5,7 +5,8 @@ import {
   tutors,
   getPendingTutors,
   approveTutor,
-  rejectTutor
+  rejectTutor,
+  getRequests
 } from "../controllers/admin.controller.js";
 import { protect, authorize } from "../middleware/auth.middleware.js";
 import { ROLES } from "../utils/constants.js";
@@ -18,7 +19,11 @@ router.get("/dashboard", dashboardStats);
 router.get("/students", students);
 router.get("/tutors", tutors);
 router.get("/pending-tutors", getPendingTutors);
+
 router.patch("/tutors/:tutorId/approve", approveTutor);
 router.delete("/tutors/:tutorId/reject", rejectTutor);
+
+// Student-Tutor Requests
+router.get("/requests", getRequests);
 
 export default router;

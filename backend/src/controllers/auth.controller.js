@@ -1,11 +1,15 @@
 import { User } from "../models/User.js";
 import { ROLES } from "../utils/constants.js";
 import { generateToken } from "../utils/jwt.js";
+import fs from "fs";
+import path from "path";
+
 
 const sanitize = (u) => ({
   id: u._id,
   fullName: u.fullName,
   email: u.email,
+  profilePicture: u.profilePicture,
   role: u.role,
   class: u.class,
   subjects: u.subjects,
@@ -165,9 +169,49 @@ export const updateProfile = async (req, res) => {
     if (email) user.email = email;
     if (password) user.password = password; // Password will be hashed by pre-save hook
     if (aboutMe !== undefined) user.aboutMe = aboutMe;
-    if (subjects) user.subjects = subjects;
+    if (subjects) {
+      // Accept both array and JSON string
+      if (typeof subjects === "string") {
+        try {
+          user.subjects = JSON.parse(subjects);
+        } catch {
+          user.subjects = [];
+        }
+      } else {
+        user.subjects = subjects;
+      }
+    }
+
+    // Handle profile picture removal
+    if (req.body.removeProfilePicture === "true" || req.body.removeProfilePicture === true) {
+      // If we want to physically delete the file
+      if (user.profilePicture) {
+        try {
+          const filePath = path.join(process.cwd(), user.profilePicture);
+          if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+          }
+        } catch (err) {
+          console.error("Error deleting old profile picture file:", err);
+        }
+      }
+      user.profilePicture = "";
+    }
+
+    // Handle profile picture upload
+    if (req.files?.profilePicture) {
+      // Delete old file if it exists before saving new one
+      if (user.profilePicture && !req.body.removeProfilePicture) {
+        try {
+          const oldPath = path.join(process.cwd(), user.profilePicture);
+          if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+        } catch (err) {}
+      }
+      user.profilePicture = req.files.profilePicture[0].path;
+    }
 
     await user.save();
+    console.log("User updated in DB, profilePicture:", user.profilePicture);
     res.json({ user: sanitize(user), message: "Profile updated successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message || "Error updating profile" });
