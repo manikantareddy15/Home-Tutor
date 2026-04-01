@@ -20,6 +20,7 @@ import TutorMessagesPage from "../pages/tutor/TutorMessagesPage";
 import TutorEditProfilePage from "../pages/tutor/TutorProfilePage";
 import AdminDashboardPage from "../pages/admin/AdminDashboardPage";
 import AdminTutorsPage from "../pages/admin/AdminTutorsPage";
+import AdminTutorDetailsPage from "../pages/admin/AdminTutorDetailsPage";
 import AdminStudentsPage from "../pages/admin/AdminStudentsPage";
 import AdminApprovalsPage from "../pages/admin/AdminApprovalsPage";
 import AdminSessionsPage from "../pages/admin/AdminSessionsPage";
@@ -52,6 +53,7 @@ const AppRoutes = () => (
     <Route path="/admin" element={<ProtectedRoute role="admin"><AdminLayout /></ProtectedRoute>}>
       <Route index element={<AdminDashboardPage />} />
       <Route path="tutors" element={<AdminTutorsPage />} />
+      <Route path="tutors/:id" element={<AdminTutorDetailsPage />} />
       <Route path="students" element={<AdminStudentsPage />} />
       <Route path="approvals" element={<AdminApprovalsPage />} />
       <Route path="sessions" element={<AdminSessionsPage />} />

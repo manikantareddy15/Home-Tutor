@@ -104,9 +104,9 @@ const AdminDashboardPage = () => {
       {/* Recent Sessions */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 mb-6 sm:mb-8 mx-4 sm:mx-0">
         <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">Recent Sessions</h3>
-        {data.recentSessions && data.recentSessions.length > 0 ? (
+        {data.recentSessions && data.recentSessions.filter(s => s.status !== "pending").length > 0 ? (
           <div className="space-y-3">
-            {data.recentSessions.map((session) => (
+            {data.recentSessions.filter(s => s.status !== "pending").map((session) => (
               <div
                 key={session._id}
                 className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 p-4 sm:p-5 border-l-4 border-l-blue-500 border border-gray-200 rounded-lg bg-gray-50 hover:bg-blue-50 hover:shadow-md transition-all duration-300"

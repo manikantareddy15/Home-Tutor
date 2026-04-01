@@ -148,3 +148,25 @@ export const tutors = async (req, res) => {
     res.status(500).json({ message: err.message || "Error fetching tutors" });
   }
 };
+
+export const getTutorDetails = async (req, res) => {
+  try {
+    const { tutorId } = req.params;
+    
+    const tutor = await User.findById(tutorId).select("-password");
+    
+    if (!tutor || tutor.role !== ROLES.TUTOR) {
+      return res.status(404).json({ message: "Tutor not found" });
+    }
+
+    // Count completed sessions for this tutor
+    const completedSessions = await Booking.countDocuments({
+      tutor: tutorId,
+      status: "completed"
+    });
+
+    res.status(200).json({ tutor, completedSessions });
+  } catch (err) {
+    res.status(500).json({ message: err.message || "Error fetching tutor details" });
+  }
+};

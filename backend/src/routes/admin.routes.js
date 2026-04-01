@@ -3,6 +3,7 @@ import {
   dashboardStats,
   students,
   tutors,
+  getTutorDetails,
   getPendingTutors,
   approveTutor,
   rejectTutor,
@@ -18,6 +19,7 @@ router.use(protect, authorize(ROLES.ADMIN));
 router.get("/dashboard", dashboardStats);
 router.get("/students", students);
 router.get("/tutors", tutors);
+router.get("/tutors/:tutorId", getTutorDetails);
 router.get("/pending-tutors", getPendingTutors);
 
 router.patch("/tutors/:tutorId/approve", approveTutor);

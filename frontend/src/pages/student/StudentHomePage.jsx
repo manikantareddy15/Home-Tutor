@@ -136,6 +136,25 @@ const StudentHomePage = () => {
       return "completed";
     }
 
+    // Check for "not attended" status - confirmed but OTP not verified and session time passed
+    if (booking.status === "confirmed") {
+      const sessionDate = booking.date ? new Date(booking.date) : (booking.startTime ? new Date(booking.startTime) : null);
+      if (sessionDate) {
+        const [hours, minutes] = (booking.sessionTime || "10:00").split(":");
+        const startTime = new Date(sessionDate);
+        startTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+        const duration = booking.duration || 1;
+        const endTime = new Date(startTime);
+        endTime.setHours(endTime.getHours() + duration);
+        const now = new Date();
+        
+        // If session time has passed and OTP is not verified, mark as not attended
+        if (now > endTime && !booking.otp) {
+          return "not attended";
+        }
+      }
+    }
+
     // Calculate session timing
     const sessionDate = booking.date ? new Date(booking.date) : (booking.startTime ? new Date(booking.startTime) : null);
     if (!sessionDate) return "pending";
@@ -166,7 +185,7 @@ const StudentHomePage = () => {
   const todaySessions = bookings.filter((b) => {
     // Support both old (startTime) and new (date) formats
     const sessionDate = b.date ? new Date(b.date).toDateString() : (b.startTime ? new Date(b.startTime).toDateString() : null);
-    return sessionDate === today;
+    return sessionDate === today && b.status === "confirmed";
   });
   const upcomingSessions = bookings.filter((b) => {
     const sessionDate = b.date ? new Date(b.date) : (b.startTime ? new Date(b.startTime) : null);
@@ -273,9 +292,11 @@ const StudentHomePage = () => {
                       ? "bg-green-100 text-green-700"
                       : getSessionStatus(booking) === "ongoing"
                         ? "bg-blue-100 text-blue-700"
-                        : "bg-yellow-100 text-yellow-700"
+                        : getSessionStatus(booking) === "not attended"
+                          ? "bg-red-100 text-red-700"
+                          : "bg-yellow-100 text-yellow-700"
                       }`}>
-                      {getSessionStatus(booking) === "completed" ? "Completed" : getSessionStatus(booking) === "ongoing" ? "Ongoing" : "Not Started"}
+                      {getSessionStatus(booking) === "completed" ? "Completed" : getSessionStatus(booking) === "ongoing" ? "Ongoing" : getSessionStatus(booking) === "not attended" ? "Not Attended" : "Not Started"}
                     </span>
                   </div>
                 </div>

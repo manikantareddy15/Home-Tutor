@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
+
 const AdminTutorsPage = () => {
   const [list, setList] = useState([]);
+  const navigate = useNavigate();
+
   useEffect(() => {
     api.get("/admin/tutors").then((r) => setList(r.data.tutors));
   }, []);
+
+  const handleViewDetails = (tutorId) => {
+    navigate(`/admin/tutors/${tutorId}`);
+  };
 
   return (
     <div className="max-w-5xl mx-auto py-8">
@@ -67,9 +75,8 @@ const AdminTutorsPage = () => {
             </div>
             <div className="flex gap-2 mt-auto">
               <button
+                onClick={() => handleViewDetails(tutor._id)}
                 className="flex-1 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg text-xs font-semibold transition"
-                title="View Details (not implemented)"
-                disabled
               >
                 View Details
               </button>
