@@ -34,32 +34,27 @@ const TutorSchedulePage = () => {
     "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"
   ];
 
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-  const dayShorts = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const dayShorts = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-  // Get current week dates
-  const getCurrentWeekDates = () => {
+  // Get next 7 days starting from today
+  const getNext7Days = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    // Get Monday of this week
-    const day = today.getDay();
-    const diff = today.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
-    const monday = new Date(today.setDate(diff));
-    
     const dates = [];
     for (let i = 0; i < 7; i++) {
-      const date = new Date(monday);
-      date.setDate(monday.getDate() + i);
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
       date.setHours(0, 0, 0, 0);
       dates.push(date);
     }
     return dates;
   };
 
-  const weekDates = getCurrentWeekDates();
+  const nextSevenDays = getNext7Days();
   
-  console.log("Week Dates:", weekDates.map(d => d.toLocaleDateString("en-IN")));
+  console.log("Next 7 Days:", nextSevenDays.map(d => d.toLocaleDateString("en-IN")));
   console.log("Bookings:", bookings.map(b => ({ date: b.date, sessionTime: b.sessionTime, status: b.status })));
 
   const formatTime = (time) => {
@@ -71,7 +66,7 @@ const TutorSchedulePage = () => {
   };
 
   const getSessionForSlot = (dayIndex, timeSlot) => {
-    const slotDate = new Date(weekDates[dayIndex]);
+    const slotDate = new Date(nextSevenDays[dayIndex]);
     slotDate.setHours(0, 0, 0, 0);
 
     const session = bookings.find((booking) => {
@@ -128,17 +123,24 @@ const TutorSchedulePage = () => {
             gridTemplateColumns: "80px repeat(7, 1fr)"
           }}>
             <div className="p-4 border-r border-gray-200"></div>
-            {dayShorts.map((day, idx) => (
-              <div
-                key={day}
-                className="p-4 text-center border-r border-gray-200 last:border-r-0"
-              >
-                <p className="font-semibold text-gray-900">{day}</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  {weekDates[idx].toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
-                </p>
-              </div>
-            ))}
+            {nextSevenDays.map((date, idx) => {
+              const dayName = dayShorts[date.getDay()];
+              const isToday = date.toDateString() === new Date().toDateString();
+              return (
+                <div
+                  key={idx}
+                  className={`p-4 text-center border-r border-gray-200 last:border-r-0 ${
+                    isToday ? "bg-indigo-100 border-b-2 border-b-indigo-600" : ""
+                  }`}
+                >
+                  {isToday && <p className="text-xs font-bold text-black mb-1">Today</p>}
+                  <p className="font-semibold text-gray-900">{dayName}</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {date.toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
+                  </p>
+                </div>
+              );
+            })}
           </div>
 
           {/* Time Slots */}
@@ -156,11 +158,11 @@ const TutorSchedulePage = () => {
               </div>
 
               {/* Day Cells */}
-              {days.map((day, dayIndex) => {
+              {Array.from({ length: 7 }).map((_, dayIndex) => {
                 const session = getSessionForSlot(dayIndex, timeSlot);
                 return (
                   <div
-                    key={`${day}-${timeSlot}`}
+                    key={`${dayIndex}-${timeSlot}`}
                     className={`p-4 border-r border-gray-200 last:border-r-0 flex items-center justify-center text-center transition-all ${
                       session
                         ? "bg-indigo-50 border-l-4 border-l-indigo-600"
