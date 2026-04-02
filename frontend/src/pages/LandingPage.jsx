@@ -12,17 +12,17 @@ const LandingPage = () => {
           <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center">
             <img src="/home_logo.jpg" alt="Home-Tutor Logo" className="w-12 h-12 rounded-full object-cover" />
           </div>
-          <span className="text-3xl font-bold text-blue-600">Home-Tutor</span>
+          <span className="text-3xl font-bold text-blue-600">HomeTutor</span>
         </div>
         <div className="hidden md:flex gap-8 items-center">
-          <a href="#features" className="text-gray-700 hover:text-blue-600">Features</a>
-          <a href="#courses" className="text-gray-700 hover:text-blue-600">Courses</a>
-          <a href="#about" className="text-gray-700 hover:text-blue-600">About</a>
+          <a href="#features" className="text-gray-700 hover:text-blue-600"><b>Features</b></a>
+          <a href="#courses" className="text-gray-700 hover:text-blue-600"><b>Courses</b></a>
+          <a href="#about" className="text-gray-700 hover:text-blue-600"><b>About</b></a>
           <button
             onClick={() => navigate("/login")}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
           >
-            Login
+            <b>Login</b>
           </button>
         </div>
       </nav>
@@ -32,11 +32,12 @@ const LandingPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div>
-            <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Online Education <br /> <span className="text-blue-600">Feel Like Real Classroom</span>
+            <h1 className="text-5xl lg:text-6xl font-black text-gray-900 mb-6 leading-tight tracking-tight">
+              Online <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600">Education</span> <br /> 
+              <span className="text-blue-600 text-5xl lg:text-6xl">Feel Like Real Classroom</span>
             </h1>
-            <p className="text-gray-600 text-lg mb-8">
-              Connect with experienced tutors, schedule personalized lessons, and learn at your own pace. Quality education made accessible and affordable for everyone.
+            <p className="text-gray-600 text-lg lg:text-xl mb-8 font-light leading-relaxed max-w-lg">
+              <b>Connect with experienced tutors, schedule personalized lessons, and learn at your own pace. Quality education made accessible and affordable for everyone.</b>
             </p>
             <div className="flex gap-4">
               <button
@@ -79,28 +80,28 @@ const LandingPage = () => {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 pt-12 border-t border-gray-200">
           <div className="text-center">
-            <h3 className="text-3xl font-bold text-blue-600 mb-2">5000+</h3>
-            <p className="text-gray-600">Active Tutors</p>
+            <p className="text-4xl font-black text-blue-600">5000+</p>
+            <p className="text-gray-600 font-light">Active Tutors</p>
           </div>
           <div className="text-center">
-            <h3 className="text-3xl font-bold text-blue-600 mb-2">15000+</h3>
-            <p className="text-gray-600">Active Students</p>
+            <p className="text-4xl font-black text-blue-600">15000+</p>
+            <p className="text-gray-600 font-light">Active Students</p>
           </div>
           <div className="text-center">
-            <h3 className="text-3xl font-bold text-blue-600 mb-2">50000+</h3>
-            <p className="text-gray-600">Sessions Completed</p>
+            <p className="text-4xl font-black text-blue-600">50000+</p>
+            <p className="text-gray-600 font-light">Sessions Completed</p>
           </div>
           <div className="text-center">
-            <h3 className="text-3xl font-bold text-blue-600 mb-2">98%</h3>
-            <p className="text-gray-600">Satisfaction Rate</p>
+            <p className="text-4xl font-black text-blue-600">98%</p>
+            <p className="text-gray-600 font-light">Satisfaction Rate</p>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
       <section id="features" className="px-6 lg:px-16 py-20 bg-gray-50">
-        <h2 className="text-4xl font-bold text-center mb-4">Why Choose Home-Tutor?</h2>
-        <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+        <h2 className="text-5xl lg:text-6xl font-black text-center mb-4 text-gray-900 tracking-tight">Why Choose <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600">Home-Tutor?</span></h2>
+        <p className="text-center text-gray-600 text-lg font-light mb-12 max-w-2xl mx-auto">
           We provide a complete platform for online learning with flexibility, affordability, and quality education.
         </p>
 
@@ -110,7 +111,7 @@ const LandingPage = () => {
             <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-6">
               <Users className="w-8 h-8 text-blue-600" />
             </div>
-            <h3 className="text-2xl font-bold mb-3">Expert Tutors</h3>
+            <h3 className="text-2xl font-bold mb-3 text-gray-900 tracking-tight">Expert Tutors</h3>
             <p className="text-gray-600">Learn from verified and experienced tutors in various subjects and skill levels.</p>
           </div>
 
@@ -163,8 +164,8 @@ const LandingPage = () => {
 
       {/* Courses Section */}
       <section id="courses" className="px-6 lg:px-16 py-20">
-        <h2 className="text-4xl font-bold text-center mb-4">Popular Learning Areas</h2>
-        <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+        <h2 className="text-5xl lg:text-6xl font-black text-center mb-4 text-gray-900 tracking-tight">Popular Learning <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600">Areas</span></h2>
+        <p className="text-center text-gray-600 text-lg font-light mb-12 max-w-2xl mx-auto">
           Explore various subjects and skills taught by our expert tutors.
         </p>
 
@@ -183,7 +184,7 @@ const LandingPage = () => {
               key={idx}
               className="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-lg text-center hover:shadow-lg transition cursor-pointer"
             >
-              <h3 className="text-xl font-bold mb-2">{course.name}</h3>
+              <h3 className="text-xl font-bold mb-2 text-gray-900 tracking-tight">{course.name}</h3>
               <p className="text-blue-600 font-semibold">{course.tutors} Tutors Available</p>
             </div>
           ))}
@@ -193,8 +194,8 @@ const LandingPage = () => {
       {/* CTA Section */}
       <section id="about" className="px-6 lg:px-16 py-20 bg-blue-600 text-white">
         <div className="text-center max-w-3xl mx-auto">
-          <h2 className="text-4xl font-bold mb-6">Ready to Start Learning?</h2>
-          <p className="text-xl mb-8 text-blue-100">
+          <h2 className="text-5xl lg:text-6xl font-black mb-6 tracking-tight">Ready to Start <span className="text-cyan-300">Learning?</span></h2>
+          <p className="text-xl lg:text-2xl mb-8 text-blue-100 font-light">
             Join thousands of students who are already learning with Home-Tutor. Connect with expert tutors today and take your education to the next level.
           </p>
           <button
@@ -212,36 +213,36 @@ const LandingPage = () => {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <img src="/home_logo.jpg" alt="Home-Tutor Logo" className="w-8 h-8" />
-              <span className="text-xl font-bold text-white">Home-Tutor</span>
+              <span className="text-2xl font-black text-white tracking-tight\">Home-Tutor</span>
             </div>
-            <p className="text-sm">Quality online education made accessible to everyone.</p>
+            <p className="text-sm font-light text-gray-400\">Quality online education made accessible to everyone.</p>
           </div>
           <div>
-            <h4 className="font-bold text-white mb-4">For Students</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="font-black text-white mb-4 text-lg tracking-tight\">For Students</h4>
+            <ul className="space-y-2 text-sm font-light\">
               <li><a href="#" className="hover:text-blue-400">Find Tutors</a></li>
               <li><a href="#" className="hover:text-blue-400">How It Works</a></li>
               <li><a href="#" className="hover:text-blue-400">Pricing</a></li>
             </ul>
           </div>
           <div>
-            <h4 className="font-bold text-white mb-4">For Tutors</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="font-black text-white mb-4 text-lg tracking-tight">For Tutors</h4>
+            <ul className="space-y-2 text-sm font-light">
               <li><a href="#" className="hover:text-blue-400">Become a Tutor</a></li>
               <li><a href="#" className="hover:text-blue-400">Earnings</a></li>
               <li><a href="#" className="hover:text-blue-400">Support</a></li>
             </ul>
           </div>
           <div>
-            <h4 className="font-bold text-white mb-4">Company</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="font-black text-white mb-4 text-lg tracking-tight">Company</h4>
+            <ul className="space-y-2 text-sm font-light">
               <li><a href="#" className="hover:text-blue-400">About Us</a></li>
               <li><a href="#" className="hover:text-blue-400">Contact</a></li>
               <li><a href="#" className="hover:text-blue-400">Privacy Policy</a></li>
             </ul>
           </div>
         </div>
-        <div className="border-t border-gray-700 pt-8 text-center text-sm">
+        <div className="border-t border-gray-700 pt-8 text-center text-sm font-light text-gray-400\">
           <p>&copy; 2024 Home-Tutor. All rights reserved.</p>
         </div>
       </footer>
