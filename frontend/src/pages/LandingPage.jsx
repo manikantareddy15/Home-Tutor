@@ -1,8 +1,43 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import { BookOpen, Users, Award, MessageSquare, Clock, Zap } from "lucide-react";
+
+const useCountUp = (end, duration = 2000, suffix = "") => {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started.current) {
+          started.current = true;
+          const startTime = performance.now();
+          const animate = (now) => {
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setCount(Math.floor(eased * end));
+            if (progress < 1) requestAnimationFrame(animate);
+          };
+          requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.3 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [end, duration]);
+
+  return { ref, display: `${count.toLocaleString()}${suffix}` };
+};
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const tutors = useCountUp(5000, 2000, "+");
+  const students = useCountUp(15000, 2000, "+");
+  const sessions = useCountUp(50000, 2500, "+");
+  const satisfaction = useCountUp(98, 1800, "%");
 
   return (
     <div className="bg-white">
@@ -212,25 +247,25 @@ const LandingPage = () => {
 
       {/* Stats Section */}
       <section className="px-6 lg:px-16 py-20 bg-gray-50">
-        <h2 className="text-5xl lg:text-6xl font-black text-center mb-4 text-gray-900 tracking-tight">Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600">Numbers</span></h2>
+        <h2 className="text-5xl lg:text-6xl font-black text-center mb-4 text-gray-900 tracking-tight">Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600">Users</span></h2>
         <p className="text-center text-gray-600 text-lg font-light mb-14 max-w-2xl mx-auto">
           Trusted by thousands of students and tutors across the country.
         </p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-          <div className="text-center bg-white rounded-2xl p-8 shadow-md border border-gray-100 hover:shadow-lg transition">
-            <p className="text-4xl font-black text-blue-600">5000+</p>
+          <div ref={tutors.ref} className="text-center bg-white rounded-2xl p-8 shadow-md border border-gray-100 hover:shadow-lg transition">
+            <p className="text-4xl font-black text-blue-600">{tutors.display}</p>
             <p className="text-gray-600 font-light mt-2">Active Tutors</p>
           </div>
-          <div className="text-center bg-white rounded-2xl p-8 shadow-md border border-gray-100 hover:shadow-lg transition">
-            <p className="text-4xl font-black text-blue-600">15000+</p>
+          <div ref={students.ref} className="text-center bg-white rounded-2xl p-8 shadow-md border border-gray-100 hover:shadow-lg transition">
+            <p className="text-4xl font-black text-blue-600">{students.display}</p>
             <p className="text-gray-600 font-light mt-2">Active Students</p>
           </div>
-          <div className="text-center bg-white rounded-2xl p-8 shadow-md border border-gray-100 hover:shadow-lg transition">
-            <p className="text-4xl font-black text-blue-600">50000+</p>
+          <div ref={sessions.ref} className="text-center bg-white rounded-2xl p-8 shadow-md border border-gray-100 hover:shadow-lg transition">
+            <p className="text-4xl font-black text-blue-600">{sessions.display}</p>
             <p className="text-gray-600 font-light mt-2">Sessions Completed</p>
           </div>
-          <div className="text-center bg-white rounded-2xl p-8 shadow-md border border-gray-100 hover:shadow-lg transition">
-            <p className="text-4xl font-black text-blue-600">98%</p>
+          <div ref={satisfaction.ref} className="text-center bg-white rounded-2xl p-8 shadow-md border border-gray-100 hover:shadow-lg transition">
+            <p className="text-4xl font-black text-blue-600">{satisfaction.display}</p>
             <p className="text-gray-600 font-light mt-2">Satisfaction Rate</p>
           </div>
         </div>

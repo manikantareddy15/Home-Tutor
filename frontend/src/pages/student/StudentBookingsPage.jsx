@@ -61,13 +61,13 @@ const StudentBookingsPage = () => {
 
   const getStatusStyle = (status) => {
     switch (status) {
-      case "ongoing":    return "bg-blue-100 text-blue-600 border border-blue-200";
-      case "completed":  return "bg-gray-100 text-gray-600 border border-gray-200";
-      case "cancelled":  return "bg-red-100 text-red-500 border border-red-200";
-      case "pending":    return "bg-yellow-100 text-yellow-700 border border-yellow-200";
-      case "confirmed":  return "bg-green-100 text-green-600 border border-green-200";
-      case "rejected":   return "bg-red-100 text-red-500 border border-red-200";
-      default:           return "bg-gray-100 text-gray-600 border border-gray-200";
+      case "ongoing": return "bg-blue-100 text-blue-600 border border-blue-200";
+      case "completed": return "bg-gray-100 text-gray-600 border border-gray-200";
+      case "cancelled": return "bg-red-100 text-red-500 border border-red-200";
+      case "pending": return "bg-yellow-100 text-yellow-700 border border-yellow-200";
+      case "confirmed": return "bg-green-100 text-green-600 border border-green-200";
+      case "rejected": return "bg-red-100 text-red-500 border border-red-200";
+      default: return "bg-gray-100 text-gray-600 border border-gray-200";
     }
   };
 
@@ -129,11 +129,10 @@ const StudentBookingsPage = () => {
             <button
               key={tab}
               onClick={() => setStatusFilter(tab)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition border ${
-                statusFilter === tab
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition border ${statusFilter === tab
                   ? "bg-blue-50 text-blue-600 border-blue-400"
                   : "bg-white text-gray-600 border-gray-200 hover:border-blue-300 hover:text-blue-500"
-              }`}
+                }`}
             >
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
             </button>
@@ -170,7 +169,7 @@ const StudentBookingsPage = () => {
                       />
                     ) : (
                       <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                       </svg>
                     )}
                   </div>
