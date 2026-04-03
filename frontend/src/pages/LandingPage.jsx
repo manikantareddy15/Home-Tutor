@@ -80,14 +80,25 @@ const LandingPage = () => {
       </section>
 
       {/* About Our Tutors Section */}
-      <section className="px-6 lg:px-16 py-20 bg-white">
+      <section className="px-6 lg:px-16 pt-2 pb-20 bg-white">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
           {/* Left - Image */}
-          <div className="flex justify-center">
+          <div className="flex justify-start relative">
+            {/* Decorative Background */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-96 h-96 bg-gradient-to-br from-blue-200 via-blue-100 to-purple-200 rounded-full filter blur-3xl opacity-60 absolute"></div>
+              <div className="w-80 h-80 bg-gradient-to-tr from-cyan-200 to-blue-300 rounded-full filter blur-2xl opacity-40 absolute"></div>
+            </div>
+
+            {/* Decorative Shapes */}
+            <div className="absolute top-10 right-10 w-20 h-20 bg-blue-400 rounded-full opacity-20 blur-lg"></div>
+            <div className="absolute bottom-20 left-5 w-32 h-32 bg-purple-400 rounded-full opacity-15 blur-lg"></div>
+            <div className="absolute top-1/2 right-0 w-24 h-24 bg-cyan-300 rounded-full opacity-20 blur-lg"></div>
+
             <img
-              src="/about-tutors.jpg"
+              src="/tutor1.jpg"
               alt="About Our Tutors"
-              className="w-full max-w-md h-auto rounded-2xl shadow-lg object-cover"
+              className="w-full max-w-md h-auto rounded-2xl object-cover relative z-10"
             />
           </div>
 
@@ -97,11 +108,11 @@ const LandingPage = () => {
             <p className="text-gray-600 text-lg leading-relaxed mb-6">
               Our tutors are passionate educators who bring expertise, dedication, and personalized attention to every session. Each tutor holds verified academic credentials and undergoes a rigorous selection process to ensure top-quality teaching standards.
             </p>
-            
+
             <p className="text-gray-600 text-lg leading-relaxed mb-8">
               They tailor each lesson to the student's learning style, pace, and goals — breaking down complex topics into simple, understandable concepts. Our tutors genuinely care about student progress, going the extra mile with additional resources, tips, and ongoing support.
             </p>
-           
+
           </div>
         </div>
       </section>
