@@ -423,7 +423,7 @@ const LandingPage = () => {
 
       {/* Stats Section */}
       <section className="px-6 lg:px-16 py-20 bg-gray-50">
-        <h2 className="text-5xl lg:text-6xl font-black text-center mb-4 text-gray-900 tracking-tight">Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600">Numbers</span></h2>
+        <h2 className="text-5xl lg:text-6xl font-black text-center mb-4 text-gray-900 tracking-tight">Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600">Users</span></h2>
         <p className="text-center text-gray-600 text-lg font-light mb-14 max-w-2xl mx-auto">
           Trusted by thousands of students and tutors across the country.
         </p>
