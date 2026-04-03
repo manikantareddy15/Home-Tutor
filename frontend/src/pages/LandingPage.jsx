@@ -1,11 +1,204 @@
 import { useNavigate } from "react-router-dom";
 import { BookOpen, Users, Award, MessageSquare, Clock, Zap } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+
+// Custom hook for intersection observer
+const useInView = (ref, options = {}) => {
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsInView(true);
+        observer.unobserve(entry.target);
+      }
+    }, {
+      threshold: 0.1,
+      ...options,
+    });
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, [ref, options]);
+
+  return isInView;
+};
+
+// Countup Number Component
+const CountupNumber = ({ target, duration = 2000, suffix = "" }) => {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref);
+
+  useEffect(() => {
+    if (!isInView) return;
+
+    let startTime = null;
+    const animate = (currentTime) => {
+      if (!startTime) startTime = currentTime;
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Parse target number
+      const numTarget = parseInt(target.toString().replace(/[^0-9]/g, ''));
+      const current = Math.floor(numTarget * progress);
+      setCount(current);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }, [isInView, target, duration]);
+
+  return (
+    <p ref={ref} className="text-4xl font-black text-blue-600">
+      {count.toLocaleString()}{suffix}
+    </p>
+  );
+};
+
+// Timeline Item Component
+const TimelineItem = ({ position, title, description, icon, colorClass, borderClass, circleColor, isFirst, isLast }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref);
+
+  if (position === "left") {
+    return (
+      <div ref={ref} className={`timeline-item relative py-4 lg:py-6 ${isInView ? 'in-view' : ''}`}>
+        <div className="flex items-center gap-0 lg:gap-12">
+          {/* Content - Left Side */}
+          <div className="w-full lg:w-6/12 lg:text-right pr-2 lg:pr-48">
+            <div className={`bg-gradient-to-br ${colorClass} p-6 rounded-xl border-2 ${borderClass} hover:shadow-2xl hover:scale-105 transition-all duration-300 h-auto`}>
+              <div className="flex items-center gap-4 mb-4">
+                <div className="text-2xl flex-shrink-0">{icon}</div>
+                <h3 className="text-xl font-bold text-gray-900 leading-tight">{title}</h3>
+              </div>
+              <p className="text-gray-700 text-sm leading-relaxed font-medium tracking-wide">{description}</p>
+            </div>
+          </div>
+
+          {/* Center Tick Mark */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
+            <div className={`w-10 h-10 ${circleColor} rounded-full shadow-lg border-4 border-gray-50 flex items-center justify-center`}>
+              <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+            </div>
+          </div>
+
+          {/* Empty Space - Right Side */}
+          <div className="w-full lg:w-6/12"></div>
+        </div>
+      </div>
+    );
+  }
+
+  // Right position
+  return (
+    <div ref={ref} className={`timeline-item relative py-4 lg:py-6 ${isInView ? 'in-view' : ''}`}>
+      <div className="flex items-center gap-0 lg:gap-12">
+        {/* Empty Space - Left Side */}
+        <div className="w-full lg:w-6/12"></div>
+
+        {/* Center Tick Mark */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 z-10">
+          <div className={`w-10 h-10 ${circleColor} rounded-full shadow-lg border-4 border-gray-50 flex items-center justify-center`}>
+            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+          </div>
+        </div>
+
+        {/* Content - Right Side */}
+        <div className="w-full lg:w-6/12 lg:text-left pl-2 lg:pl-48">
+          <div className={`bg-gradient-to-br ${colorClass} p-6 rounded-xl border-2 ${borderClass} hover:shadow-2xl hover:scale-105 transition-all duration-300 h-auto`}>
+            <div className="flex items-center gap-4 mb-4">
+              <div className="text-2xl flex-shrink-0">{icon}</div>
+              <h3 className="text-xl font-bold text-gray-900 leading-tight">{title}</h3>
+            </div>
+            <p className="text-gray-700 text-sm leading-relaxed font-medium tracking-wide">{description}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const LandingPage = () => {
   const navigate = useNavigate();
 
   return (
     <div className="bg-white">
+      <style>{`
+        @keyframes slideUpFromBelow {
+          0% {
+            opacity: 0;
+            transform: translateY(80px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeOut {
+          to {
+            opacity: 0;
+            transform: translateY(80px);
+          }
+        }
+
+        .timeline-item {
+          opacity: 0;
+          transform: translateY(80px);
+        }
+
+        .timeline-item.in-view {
+          animation: slideUpFromBelow 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .timeline-item:nth-child(1).in-view { animation-delay: 0s; }
+        .timeline-item:nth-child(2).in-view { animation-delay: 0.25s; }
+        .timeline-item:nth-child(3).in-view { animation-delay: 0.5s; }
+        .timeline-item:nth-child(4).in-view { animation-delay: 0.75s; }
+        .timeline-item:nth-child(5).in-view { animation-delay: 1s; }
+        .timeline-item:nth-child(6).in-view { animation-delay: 1.25s; }
+
+        .timeline-container {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+        }
+
+        @media (min-width: 1024px) {
+          .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 1.5rem;
+            bottom: 1.5rem;
+            width: 2px;
+            border-left: 2px dashed rgb(191, 219, 254);
+            pointer-events: none;
+            z-index: 0;
+          }
+        }
+
+        @media (max-width: 1023px) {
+          .timeline-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+          }
+        }
+      `}</style>
+
       {/* Navigation */}
       <nav className="flex justify-between items-center px-6 lg:px-16 py-6 lg:py-8 shadow-md">
         <div className="flex items-center gap-3">
@@ -117,66 +310,84 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Features Section - Alternating Timeline */}
       <section id="features" className="px-6 lg:px-16 py-20 bg-gray-50">
         <h2 className="text-5xl lg:text-6xl font-black text-center mb-4 text-gray-900 tracking-tight">Why Choose <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600">HomeTutor?</span></h2>
-        <p className="text-center text-gray-600 text-lg font-light mb-12 max-w-2xl mx-auto">
+        <p className="text-center text-gray-600 text-lg font-light mb-16 max-w-2xl mx-auto">
           We provide a complete platform for online learning with flexibility, affordability, and quality education.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Feature 1 */}
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-2xl border border-blue-100 hover:shadow-lg transition">
-            <div className="w-14 h-14 bg-blue-600 rounded-xl flex items-center justify-center mb-5">
-              <Users className="w-7 h-7 text-white" />
-            </div>
-            <h3 className="text-xl font-bold mb-3 text-gray-900">Expert Tutors</h3>
-            <p className="text-gray-600 leading-relaxed">Learn from verified and experienced tutors in various subjects and skill levels.</p>
-          </div>
+        {/* Timeline Container */}
+        <div className="max-w-6xl mx-auto timeline-container">
+          {/* Timeline Items */}
+          <div className="space-y-0">
+            {/* Item 1 - Left */}
+            <TimelineItem
+              position="left"
+              title="Expert Tutors"
+              description="Learn from verified and experienced tutors in various subjects and skill levels."
+              icon={<Users className="w-6 h-6 text-blue-600" />}
+              colorClass="from-blue-50 to-indigo-50"
+              borderClass="border-blue-100"
+              circleColor="bg-blue-600"
+              isFirst={true}
+            />
 
-          {/* Feature 2 */}
-          <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-8 rounded-2xl border border-purple-100 hover:shadow-lg transition">
-            <div className="w-14 h-14 bg-purple-600 rounded-xl flex items-center justify-center mb-5">
-              <Clock className="w-7 h-7 text-white" />
-            </div>
-            <h3 className="text-xl font-bold mb-3 text-gray-900">Flexible Schedule</h3>
-            <p className="text-gray-600 leading-relaxed">Book sessions at your convenient time. Learn whenever you want, wherever you are.</p>
-          </div>
+            {/* Item 2 - Right */}
+            <TimelineItem
+              position="right"
+              title="Flexible Schedule"
+              description="Book sessions at your convenient time. Learn whenever you want, wherever you are."
+              icon={<Clock className="w-6 h-6 text-purple-600" />}
+              colorClass="from-purple-50 to-pink-50"
+              borderClass="border-purple-100"
+              circleColor="bg-blue-600"
+            />
 
-          {/* Feature 3 */}
-          <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-2xl border border-green-100 hover:shadow-lg transition">
-            <div className="w-14 h-14 bg-green-600 rounded-xl flex items-center justify-center mb-5">
-              <Zap className="w-7 h-7 text-white" />
-            </div>
-            <h3 className="text-xl font-bold mb-3 text-gray-900">Interactive Learning</h3>
-            <p className="text-gray-600 leading-relaxed">Real-time video sessions with direct messaging and personalized lesson plans.</p>
-          </div>
+            {/* Item 3 - Left */}
+            <TimelineItem
+              position="left"
+              title="Interactive Learning"
+              description="Real-time video sessions with direct messaging and personalized lesson plans."
+              icon={<Zap className="w-6 h-6 text-green-600" />}
+              colorClass="from-green-50 to-emerald-50"
+              borderClass="border-green-100"
+              circleColor="bg-blue-600"
+            />
 
-          {/* Feature 4 */}
-          <div className="bg-gradient-to-br from-orange-50 to-amber-50 p-8 rounded-2xl border border-orange-100 hover:shadow-lg transition">
-            <div className="w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center mb-5">
-              <Award className="w-7 h-7 text-white" />
-            </div>
-            <h3 className="text-xl font-bold mb-3 text-gray-900">Verified Quality</h3>
-            <p className="text-gray-600 leading-relaxed">All tutors are verified and reviewed by students for quality assurance.</p>
-          </div>
+            {/* Item 4 - Right */}
+            <TimelineItem
+              position="right"
+              title="Verified Quality"
+              description="All tutors are verified and reviewed by students for quality assurance."
+              icon={<Award className="w-6 h-6 text-orange-500" />}
+              colorClass="from-orange-50 to-amber-50"
+              borderClass="border-orange-100"
+              circleColor="bg-blue-600"
+            />
 
-          {/* Feature 5 */}
-          <div className="bg-gradient-to-br from-cyan-50 to-sky-50 p-8 rounded-2xl border border-cyan-100 hover:shadow-lg transition">
-            <div className="w-14 h-14 bg-cyan-600 rounded-xl flex items-center justify-center mb-5">
-              <MessageSquare className="w-7 h-7 text-white" />
-            </div>
-            <h3 className="text-xl font-bold mb-3 text-gray-900">Direct Communication</h3>
-            <p className="text-gray-600 leading-relaxed">Chat with tutors before booking to discuss your learning goals and requirements.</p>
-          </div>
+            {/* Item 5 - Left */}
+            <TimelineItem
+              position="left"
+              title="Direct Communication"
+              description="Chat with tutors before booking to discuss your learning goals and requirements."
+              icon={<MessageSquare className="w-6 h-6 text-cyan-600" />}
+              colorClass="from-cyan-50 to-sky-50"
+              borderClass="border-cyan-100"
+              circleColor="bg-blue-600"
+            />
 
-          {/* Feature 6 */}
-          <div className="bg-gradient-to-br from-rose-50 to-red-50 p-8 rounded-2xl border border-rose-100 hover:shadow-lg transition">
-            <div className="w-14 h-14 bg-rose-600 rounded-xl flex items-center justify-center mb-5">
-              <BookOpen className="w-7 h-7 text-white" />
-            </div>
-            <h3 className="text-xl font-bold mb-3 text-gray-900">Diverse Subjects</h3>
-            <p className="text-gray-600 leading-relaxed">Find tutors for Math, Science, Languages, Programming, and many more subjects.</p>
+            {/* Item 6 - Right */}
+            <TimelineItem
+              position="right"
+              title="Diverse Subjects"
+              description="Find tutors for Math, Science, Languages, Programming, and many more subjects."
+              icon={<BookOpen className="w-6 h-6 text-rose-600" />}
+              colorClass="from-rose-50 to-red-50"
+              borderClass="border-rose-100"
+              circleColor="bg-blue-600"
+              isLast={true}
+            />
           </div>
         </div>
       </section>
@@ -218,19 +429,19 @@ const LandingPage = () => {
         </p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
           <div className="text-center bg-white rounded-2xl p-8 shadow-md border border-gray-100 hover:shadow-lg transition">
-            <p className="text-4xl font-black text-blue-600">5000+</p>
+            <CountupNumber target="5000" suffix="+" duration={2500} />
             <p className="text-gray-600 font-light mt-2">Active Tutors</p>
           </div>
           <div className="text-center bg-white rounded-2xl p-8 shadow-md border border-gray-100 hover:shadow-lg transition">
-            <p className="text-4xl font-black text-blue-600">15000+</p>
+            <CountupNumber target="15000" suffix="+" duration={2500} />
             <p className="text-gray-600 font-light mt-2">Active Students</p>
           </div>
           <div className="text-center bg-white rounded-2xl p-8 shadow-md border border-gray-100 hover:shadow-lg transition">
-            <p className="text-4xl font-black text-blue-600">50000+</p>
+            <CountupNumber target="50000" suffix="+" duration={2500} />
             <p className="text-gray-600 font-light mt-2">Sessions Completed</p>
           </div>
           <div className="text-center bg-white rounded-2xl p-8 shadow-md border border-gray-100 hover:shadow-lg transition">
-            <p className="text-4xl font-black text-blue-600">98%</p>
+            <CountupNumber target="98" suffix="%" duration={2500} />
             <p className="text-gray-600 font-light mt-2">Satisfaction Rate</p>
           </div>
         </div>
@@ -258,13 +469,13 @@ const LandingPage = () => {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <img src="/home_logo.jpg" alt="Home-Tutor Logo" className="w-8 h-8" />
-              <span className="text-2xl font-black text-white tracking-tight\">Home-Tutor</span>
+              <span className="text-2xl font-black text-white tracking-tight">Home-Tutor</span>
             </div>
-            <p className="text-sm font-light text-gray-400\">Quality online education made accessible to everyone.</p>
+            <p className="text-sm font-light text-gray-400">Quality online education made accessible to everyone.</p>
           </div>
           <div>
-            <h4 className="font-black text-white mb-4 text-lg tracking-tight\">For Students</h4>
-            <ul className="space-y-2 text-sm font-light\">
+            <h4 className="font-black text-white mb-4 text-lg tracking-tight">For Students</h4>
+            <ul className="space-y-2 text-sm font-light">
               <li><a href="#" className="hover:text-blue-400">Find Tutors</a></li>
               <li><a href="#" className="hover:text-blue-400">How It Works</a></li>
               <li><a href="#" className="hover:text-blue-400">Pricing</a></li>
@@ -287,7 +498,7 @@ const LandingPage = () => {
             </ul>
           </div>
         </div>
-        <div className="border-t border-gray-700 pt-8 text-center text-sm font-light text-gray-400\">
+        <div className="border-t border-gray-700 pt-8 text-center text-sm font-light text-gray-400">
           <p>&copy; 2024 Home-Tutor. All rights reserved.</p>
         </div>
       </footer>
