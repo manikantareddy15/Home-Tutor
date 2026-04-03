@@ -45,7 +45,7 @@ const AdminTutorDetailsPage = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-5xl mx-auto space-y-6">
       {/* Back Button */}
       <button
         onClick={() => navigate("/admin/tutors")}
@@ -73,11 +73,10 @@ const AdminTutorDetailsPage = () => {
               )}
             </div>
             {/* Status Badge */}
-            <span className={`px-4 py-2 rounded-full font-semibold text-sm ${
-              tutor.isApproved 
-                ? "bg-green-100 text-green-800" 
+            <span className={`px-4 py-2 rounded-full font-semibold text-sm ${tutor.isApproved
+                ? "bg-green-100 text-green-800"
                 : "bg-yellow-100 text-yellow-800"
-            }`}>
+              }`}>
               {tutor.isApproved ? "✓ Approved" : "⏳ Pending Approval"}
             </span>
           </div>
