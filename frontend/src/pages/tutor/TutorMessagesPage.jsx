@@ -22,10 +22,22 @@ const TutorMessagesPage = () => {
   const [menuOpenId, setMenuOpenId] = useState(null);
   const messagesEndRef = useRef(null);
   const menuRef = useRef(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const emojiPickerRef = useRef(null);
 
-  // Close menu when clicking outside
+  const EMOJIS = [
+    "😀", "😂", "😍", "🥰", "😊", "😎", "🤔", "😅", "😭", "😡",
+    "👍", "👎", "🙌", "👏", "🤝", "🙏", "💪", "✌️", "🤞", "👋",
+    "❤️", "🔥", "✨", "💯", "🎉", "🎊", "👀", "💡", "📚", "⏰",
+    "😴", "🤩", "🥳", "😇", "🤗", "😬", "🫡", "🫂", "💬", "🗓️",
+  ];
+
+  // Close emoji picker and menu when clicking outside
   useEffect(() => {
     const handler = (e) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(e.target)) {
+        setShowEmojiPicker(false);
+      }
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setMenuOpenId(null);
       }
@@ -245,63 +257,79 @@ const TutorMessagesPage = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Left Sidebar - Conversations List */}
-      <div className="w-full sm:w-80 bg-white border-r border-gray-200 flex flex-col">
-        {/* Header */}
-        <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
-          <h1 className="text-2xl font-bold text-gray-800 mb-3">Messages</h1>
+    <div style={{ height: "calc(100vh - 130px)" }} className="flex rounded-xl overflow-hidden border border-gray-200 shadow-lg bg-white">
 
-          {/* Search */}
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search students..."
-              value={searchName}
-              onChange={(e) => setSearchName(e.target.value)}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 placeholder-gray-500 text-sm"
-            />
+      {/* ─── LEFT SIDEBAR ─── */}
+      <div className="w-80 flex-shrink-0 flex flex-col border-r border-gray-200 bg-white">
 
-            {/* Dropdown List */}
-            {showDropdown && filteredStudents.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
-                {filteredStudents.map((student) => (
-                  <button
-                    key={student._id}
-                    onClick={() => handleSelectStudent(student)}
-                    className="w-full px-4 py-3 text-left hover:bg-blue-50 border-b border-gray-100 last:border-b-0 flex items-center gap-3 transition"
-                  >
-                    <div className="w-10 h-10 rounded-full bg-green-200 flex items-center justify-center text-green-600 font-bold flex-shrink-0 overflow-hidden">
-                      {student.profilePicture ? (
-                        <img src={student.profilePicture} alt="Profile" className="w-full h-full object-cover"/>
-                      ) : (
-                        <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                        </svg>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-gray-800 truncate text-sm">{student.fullName}</p>
-                      <p className="text-xs text-gray-600 truncate">{student.email}</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
+        {/* Sidebar Header */}
+        <div className="bg-blue-50 px-4 py-3 flex items-center justify-between border-b border-blue-100">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 font-bold text-sm overflow-hidden flex-shrink-0">
+              {user?.profilePicture ? (
+                <img src={user.profilePicture} alt="Profile" className="w-full h-full object-cover" />
+              ) : (
+                <svg className="w-5 h-5 text-blue-700" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                </svg>
+              )}
+            </div>
+            <span className="text-blue-800 font-semibold text-base">Chats</span>
           </div>
         </div>
 
-        {/* Conversations List */}
+        {/* Search inside sidebar */}
+        <div className="px-3 py-2 bg-white border-b border-gray-100 relative">
+          <div className="relative">
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Search or start new chat"
+              value={searchName}
+              onChange={(e) => setSearchName(e.target.value)}
+              className="w-full pl-9 pr-3 py-2 bg-gray-100 rounded-lg text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            />
+          </div>
+
+          {/* Search dropdown */}
+          {showDropdown && filteredStudents.length > 0 && (
+            <div className="absolute left-3 right-3 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl z-20 max-h-52 overflow-y-auto">
+              {filteredStudents.map((student) => (
+                <button
+                  key={student._id}
+                  onClick={() => handleSelectStudent(student)}
+                  className="w-full flex items-center gap-3 px-3 py-3 hover:bg-blue-50 transition text-left border-b border-gray-50 last:border-0"
+                >
+                  <div className="w-9 h-9 rounded-full bg-blue-100 text-blue-600 font-bold flex items-center justify-center text-sm flex-shrink-0 overflow-hidden">
+                    {student.profilePicture ? (
+                      <img src={student.profilePicture} alt="Profile" className="w-full h-full object-cover" />
+                    ) : (
+                      <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                      </svg>
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-gray-800 truncate">{student.fullName}</p>
+                    <p className="text-xs text-gray-400 truncate">{student.email || "Student"}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Conversation list */}
         <div className="flex-1 overflow-y-auto">
           {conversations.length === 0 ? (
-            <div className="flex items-center justify-center h-full text-center p-4">
-              <div>
-                <svg className="w-12 h-12 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-                <p className="text-gray-600 text-sm font-medium">No conversations</p>
-                <p className="text-gray-400 text-xs mt-1">Search and start chatting</p>
-              </div>
+            <div className="flex flex-col items-center justify-center h-full text-center px-6">
+              <svg className="w-12 h-12 text-gray-200 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+              </svg>
+              <p className="text-gray-400 text-sm">No conversations yet</p>
+              <p className="text-gray-300 text-xs mt-1">Search a student to start chatting</p>
             </div>
           ) : (
             conversations.map((conv) => (
@@ -313,24 +341,25 @@ const TutorMessagesPage = () => {
                   loadMessages(conv._id);
                   setShowDropdown(false);
                 }}
-                className={`w-full px-3 py-3 border-b border-gray-100 transition hover:bg-gray-50 text-left ${withUser === conv._id ? "bg-blue-50 border-l-4 border-l-blue-500" : ""
-                  }`}
+                className={`w-full flex items-center gap-3 px-4 py-3.5 border-b border-gray-50 hover:bg-gray-50 transition text-left ${withUser === conv._id ? "bg-blue-50" : ""}`}
               >
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-green-200 flex items-center justify-center text-green-600 font-bold flex-shrink-0 overflow-hidden">
-                    {conv.otherUser?.profilePicture ? (
-                      <img src={conv.otherUser.profilePicture} alt="Profile" className="w-full h-full object-cover"/>
-                    ) : (
-                      <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                      </svg>
-                    )}
+                {/* Avatar */}
+                <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-base flex-shrink-0 overflow-hidden">
+                  {conv.otherUser?.profilePicture ? (
+                    <img src={conv.otherUser.profilePicture} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                    </svg>
+                  )}
+                </div>
+                {/* Info */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between">
+                    <p className="font-semibold text-gray-800 text-sm truncate">{conv.otherUser?.fullName}</p>
+                    <span className="text-xs text-gray-400 flex-shrink-0 ml-2">{conv.lastMessageTime}</span>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-gray-800 truncate text-sm">{conv.otherUser?.fullName}</p>
-                    <p className="text-xs text-gray-600 truncate">{conv.lastMessage}</p>
-                    <p className="text-xs text-gray-400 mt-1">{conv.lastMessageTime}</p>
-                  </div>
+                  <p className="text-xs text-gray-400 truncate mt-0.5">{conv.lastMessage}</p>
                 </div>
               </button>
             ))
@@ -338,53 +367,63 @@ const TutorMessagesPage = () => {
         </div>
       </div>
 
-      {/* Right Side - Chat Area */}
-      <div className="hidden sm:flex flex-1 flex-col bg-white">
+      {/* ─── RIGHT CHAT PANEL ─── */}
+      <div className="flex-1 flex flex-col min-w-0" style={{ backgroundImage: "radial-gradient(circle, #dbeafe 1px, transparent 1px)", backgroundSize: "20px 20px", backgroundColor: "#f0f4ff" }}>
         {withUser ? (
           <>
-            {/* Chat Header */}
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200 p-4 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-green-200 flex items-center justify-center text-green-600 font-bold overflow-hidden">
+            {/* Chat Header — light blue bar */}
+            <div className="bg-blue-50 border-b border-blue-100 px-4 py-3 flex items-center gap-3 flex-shrink-0 shadow-sm">
+              <div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center text-blue-700 font-bold text-base overflow-hidden">
                 {recipientInfo?.profilePicture ? (
-                  <img src={recipientInfo.profilePicture} alt="Profile" className="w-full h-full object-cover"/>
+                  <img src={recipientInfo.profilePicture} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
-                  <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                  <svg className="w-5 h-5 text-blue-700" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                   </svg>
                 )}
               </div>
-              <div className="flex-1">
-                <p className="font-semibold text-gray-800">{recipientInfo?.fullName}</p>
-                <p className="text-xs text-gray-600">{recipientInfo?.email}</p>
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-gray-800 text-sm truncate">{recipientInfo?.fullName || "Chat"}</p>
+                <p className="text-blue-500 text-xs truncate">{recipientInfo?.email || ""}</p>
               </div>
             </div>
 
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto bg-gradient-to-b from-gray-50 to-white p-4 space-y-2">
-              {messages.length === 0 ? (
+            {/* Messages area */}
+            <div className="flex-1 overflow-y-auto px-4 py-3 space-y-1">
+              {loading ? (
                 <div className="flex items-center justify-center h-full">
-                  <div className="text-center">
-                    <svg className="w-16 h-16 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
-                    <p className="text-gray-500 font-medium">No messages yet</p>
-                    <p className="text-gray-400 text-sm">Start the conversation</p>
+                  <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              ) : messages.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full">
+                  <div className="bg-white bg-opacity-80 rounded-2xl px-6 py-4 text-center shadow-sm">
+                    <p className="text-gray-500 text-sm font-medium">No messages yet</p>
+                    <p className="text-gray-400 text-xs mt-1">Say hi to start the conversation 👋</p>
                   </div>
                 </div>
               ) : (
                 <>
                   {messages.map((m, index) => {
                     const isOwn = String(m.from?._id) === String(userId);
-                    const showName = !isOwn && (index === 0 || messages[index - 1]?.from?._id !== m.from?._id);
+                    const prevSame = index > 0 && String(messages[index - 1].from?._id) === String(m.from?._id);
 
                     return (
-                      <div key={m._id} className={`flex ${isOwn ? "justify-end" : "justify-start"} mb-3 group`}>
-                        <div className={`flex flex-col ${isOwn ? "items-end" : "items-start"}`}>
-                          {showName && !isOwn && (
-                            <p className="text-xs text-gray-600 font-semibold mb-1 ml-2">
-                              {m.from?.fullName || "User"}
-                            </p>
-                          )}
+                      <div key={m._id} className={`flex ${isOwn ? "justify-end" : "justify-start"} group ${prevSame ? "mt-0.5" : "mt-3"}`}>
+                        {/* Avatar — left side for received, only first in group */}
+                        {!isOwn && !prevSame && (
+                          <div className="w-7 h-7 rounded-full bg-blue-400 text-white text-xs font-bold flex items-center justify-center flex-shrink-0 mr-1.5 mt-auto mb-1 overflow-hidden">
+                            {m.from?.profilePicture ? (
+                              <img src={m.from.profilePicture} alt="Profile" className="w-full h-full object-cover" />
+                            ) : (
+                              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                              </svg>
+                            )}
+                          </div>
+                        )}
+                        {!isOwn && prevSame && <div className="w-7 mr-1.5 flex-shrink-0" />}
+                        {/* Bubble column */}
+                        <div className={`flex flex-col ${isOwn ? "items-end" : "items-start"} max-w-xs lg:max-w-sm xl:max-w-md`}>
                           <div className={`flex items-center gap-1 ${isOwn ? "flex-row-reverse" : "flex-row"}`}>
                             {/* 3-dot menu */}
                             <div className="relative flex-shrink-0" ref={menuOpenId === m._id ? menuRef : null}>
@@ -417,25 +456,33 @@ const TutorMessagesPage = () => {
                                 </div>
                               )}
                             </div>
-                            <div
-                              className={`px-4 py-2.5 rounded-2xl max-w-xs lg:max-w-md shadow-sm transition-all ${isOwn
-                                ? "bg-blue-600 text-white rounded-br-none"
-                                : "bg-gray-200 text-gray-900 rounded-bl-none"
-                                }`}
-                            >
-                              <p className="text-sm break-words leading-relaxed">{m.content}</p>
+                            {/* Bubble */}
+                            <div className={`relative px-3 py-2 rounded-2xl shadow-sm text-sm leading-relaxed break-words ${isOwn
+                              ? "bg-blue-600 text-white rounded-br-none"
+                              : "bg-white text-gray-800 rounded-bl-none border border-gray-100"
+                              }`}>
+                              {m.content}
+                              {/* Tail: SVG triangle */}
+                              {isOwn ? (
+                                <svg className="absolute -bottom-0 -right-2 w-3 h-3 text-blue-600" viewBox="0 0 10 10" fill="currentColor">
+                                  <path d="M0 0 L10 0 L0 10 Z" />
+                                </svg>
+                              ) : (
+                                <svg className="absolute -bottom-0 -left-2 w-3 h-3 text-white" viewBox="0 0 10 10" fill="currentColor">
+                                  <path d="M10 0 L0 0 L10 10 Z" />
+                                </svg>
+                              )}
                             </div>
                           </div>
-                          <p
-                            className={`text-xs mt-1 px-2 ${isOwn ? "text-gray-500" : "text-gray-600"
-                              }`}
-                          >
+                          {/* Timestamp */}
+                          <p className="text-[10px] mt-1 px-1 text-gray-400">
                             {m.createdAt
                               ? new Date(m.createdAt).toLocaleTimeString([], {
                                 hour: "2-digit",
                                 minute: "2-digit"
                               })
                               : ""}
+                            {isOwn && <span className="ml-1 text-blue-400">✓✓</span>}
                           </p>
                         </div>
                       </div>
@@ -446,38 +493,73 @@ const TutorMessagesPage = () => {
               )}
             </div>
 
-            {/* Message Input */}
-            <div className="border-t border-gray-200 bg-gray-50 p-4 sm:p-6">
-              <div className="flex gap-3">
-                <textarea
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="Type your message..."
-                  rows="2"
-                  className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 placeholder-gray-500 resize-none transition"
-                />
+            {/* Input bar */}
+            <div className="bg-white border-t border-gray-200 px-3 py-2.5 flex items-end gap-2 flex-shrink-0">
+              {/* Emoji button + picker */}
+              <div className="relative flex-shrink-0" ref={emojiPickerRef}>
                 <button
-                  onClick={send}
-                  disabled={!content.trim() || !withUser.trim()}
-                  className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 h-fit"
+                  onClick={() => setShowEmojiPicker((v) => !v)}
+                  className={`text-gray-400 hover:text-blue-500 transition pb-1 ${showEmojiPicker ? "text-blue-500" : ""}`}
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <span className="hidden sm:inline">Send</span>
                 </button>
+                {/* Emoji grid */}
+                {showEmojiPicker && (
+                  <div className="absolute bottom-12 left-0 bg-white border border-gray-200 rounded-2xl shadow-2xl p-3 w-64 z-50">
+                    <p className="text-xs text-gray-400 font-semibold mb-2 px-1">Emojis</p>
+                    <div className="grid grid-cols-8 gap-1">
+                      {EMOJIS.map((emoji) => (
+                        <button
+                          key={emoji}
+                          onClick={() => { setContent((c) => c + emoji); setShowEmojiPicker(false); }}
+                          className="text-xl hover:bg-blue-50 rounded-lg p-1 transition"
+                        >
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
+
+              {/* Text input */}
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Type a message"
+                rows={1}
+                className="flex-1 px-4 py-2.5 bg-gray-100 rounded-full text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-300 resize-none overflow-hidden border-0"
+                style={{ minHeight: "42px", maxHeight: "120px" }}
+                onInput={(e) => { e.target.style.height = "auto"; e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px"; }}
+              />
+
+              {/* Send button */}
+              <button
+                onClick={send}
+                disabled={!content.trim()}
+                className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition ${content.trim() ? "bg-blue-600 hover:bg-blue-700 text-white shadow-md" : "bg-gray-200 text-gray-400"
+                  }`}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+                </svg>
+              </button>
             </div>
           </>
         ) : (
-          <div className="flex items-center justify-center h-full text-center">
-            <div>
-              <svg className="w-20 h-20 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
-              <p className="text-gray-600 font-medium">Select a conversation</p>
-              <p className="text-gray-400 text-sm mt-1">Choose a student to start messaging</p>
+          /* No chat selected — welcome screen */
+          <div className="flex-1 flex flex-col items-center justify-center text-center px-8">
+            <div className="bg-white bg-opacity-80 rounded-3xl p-10 shadow-sm border border-blue-100 max-w-sm">
+              <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </div>
+              <h3 className="text-gray-700 font-semibold text-lg mb-2">HomeTutor Chat</h3>
+              <p className="text-gray-400 text-sm leading-relaxed">Select a conversation from the left or search for a student to start messaging.</p>
             </div>
           </div>
         )}

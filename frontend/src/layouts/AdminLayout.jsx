@@ -164,9 +164,8 @@ const AdminLayout = () => {
                         <div
                           key={notification._id}
                           onClick={() => setShowNotifications(false)}
-                          className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition ${
-                            notification.read ? "opacity-60" : ""
-                          }`}
+                          className={`p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition ${notification.read ? "opacity-60" : ""
+                            }`}
                         >
                           <div className="flex gap-3">
                             <div className={`w-3 h-3 rounded-full flex-shrink-0 mt-1 ${getNotificationDotColor(notification.type)}`}></div>
@@ -209,7 +208,7 @@ const AdminLayout = () => {
                   />
                 ) : (
                   <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                   </svg>
                 )}
               </button>
@@ -248,7 +247,7 @@ const AdminLayout = () => {
 
       {/* Floating Navigation Section */}
       <div className="px-3 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-0 flex justify-center">
-        <nav className="bg-white rounded-2xl shadow-lg border border-gray-200 w-full sm:max-w-5xl">
+        <nav className="bg-white rounded-2xl shadow-lg border border-gray-200 w-full sm:max-w-4xl">
           <div className="flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-8 py-3 sm:py-4 overflow-x-auto">
             {links.map((link) => {
               const isActive = location.pathname === link.to;
@@ -256,11 +255,10 @@ const AdminLayout = () => {
                 <button
                   key={link.to}
                   onClick={() => navigate(link.to)}
-                  className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-lg transition whitespace-nowrap flex-shrink-0 text-xs sm:text-sm ${
-                    isActive
+                  className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-lg transition whitespace-nowrap flex-shrink-0 text-xs sm:text-sm ${isActive
                       ? "bg-purple-100 text-purple-700"
                       : "text-gray-700 hover:bg-purple-50 hover:text-purple-600"
-                  }`}
+                    }`}
                 >
                   <span className={isActive ? "text-purple-600" : "text-gray-600 hover:text-purple-600"}>
                     {getIcon(link.icon)}
@@ -274,7 +272,7 @@ const AdminLayout = () => {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 overflow-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <div className="flex-1 overflow-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
         <Outlet />
       </div>
     </div>
