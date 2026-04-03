@@ -132,9 +132,9 @@ const StudentLayout = () => {
                           >
                             <div className="flex items-start gap-3">
                               <div className={`flex-shrink-0 w-2 h-2 rounded-full mt-2 ${notif.type === "booking" ? "bg-blue-500" :
-                                  notif.type === "message" ? "bg-green-500" :
-                                    notif.type === "completed" ? "bg-purple-500" :
-                                      "bg-amber-500"
+                                notif.type === "message" ? "bg-green-500" :
+                                  notif.type === "completed" ? "bg-purple-500" :
+                                    "bg-amber-500"
                                 }`}></div>
                               <div className="flex-1 min-w-0">
                                 <p className="text-sm font-semibold text-gray-800 truncate">{notif.title}</p>
@@ -180,7 +180,7 @@ const StudentLayout = () => {
                   />
                 ) : (
                   <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                   </svg>
                 )}
               </button>
@@ -231,8 +231,8 @@ const StudentLayout = () => {
                   onClick={() => navigate(link.to)}
                   aria-label={link.label}
                   className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-lg transition whitespace-nowrap flex-shrink-0 text-xs sm:text-sm ${isActive
-                      ? "bg-blue-100 text-blue-700"
-                      : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+                    ? "bg-blue-100 text-blue-700"
+                    : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
                     }`}
                 >
                   <span className={isActive ? "text-blue-600" : "text-gray-600 hover:text-blue-600"}>
