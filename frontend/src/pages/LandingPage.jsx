@@ -298,12 +298,12 @@ const LandingPage = () => {
           {/* Right - Content */}
           <div>
             <h2 className="text-4xl lg:text-5xl font-black text-gray-900 tracking-tight mb-6">About Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600">Tutors</span></h2>
-            <p className="text-gray-600 text-lg leading-relaxed mb-6">
-              Our tutors are passionate educators who bring expertise, dedication, and personalized attention to every session. Each tutor holds verified academic credentials and undergoes a rigorous selection process to ensure top-quality teaching standards.
+            <p className="text-gray-600 text-lg lg:text-xl leading-relaxed mb-6 font-semibold">
+              Our tutors are passionate educators with verified academic credentials. Each one undergoes a rigorous selection process to ensure top-quality teaching standards and personalized attention.
             </p>
 
-            <p className="text-gray-600 text-lg leading-relaxed mb-8">
-              They tailor each lesson to the student's learning style, pace, and goals — breaking down complex topics into simple, understandable concepts. Our tutors genuinely care about student progress, going the extra mile with additional resources, tips, and ongoing support.
+            <p className="text-gray-600 text-lg lg:text-xl leading-relaxed mb-8 font-semibold">
+              They tailor lessons to your learning style, pace, and goals. Our tutors genuinely care about your progress and provide additional resources and ongoing support.
             </p>
 
           </div>
