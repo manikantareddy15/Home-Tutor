@@ -147,7 +147,7 @@ const StudentHomePage = () => {
         const endTime = new Date(startTime);
         endTime.setHours(endTime.getHours() + duration);
         const now = new Date();
-        
+
         // If session time has passed and OTP is not verified, mark as not attended
         if (now > endTime && !booking.otp) {
           return "not attended";
@@ -265,161 +265,159 @@ const StudentHomePage = () => {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 mb-6 sm:mb-8">
           <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">Today's Schedule</h3>
           {todaySessions.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-            {todaySessions.map((booking) => (
-              <div
-                key={booking._id}
-                className="bg-gradient-to-br from-slate-50 to-white border-2 border-blue-300 rounded-xl p-4 sm:p-5 hover:shadow-lg transition-all duration-300 hover:border-blue-400"
-              >
-                <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4 justify-between">
-                  <div className="flex items-start gap-3 sm:gap-4 flex-1">
-                    <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-blue-200 flex items-center justify-center text-blue-600 font-bold text-base sm:text-lg flex-shrink-0 overflow-hidden">
-                      {booking.tutor?.profilePicture ? (
-                        <img src={booking.tutor.profilePicture} alt="Profile" className="w-full h-full object-cover"/>
-                      ) : (
-                        <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                        </svg>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-gray-800 font-semibold truncate text-sm sm:text-base">{booking.tutor?.fullName}</p>
-                      <p className="text-blue-600 text-xs font-medium">{booking.subject || "Subject"}</p>
-                    </div>
-                  </div>
-                  <div>
-                    <span className={`px-3 py-1 text-xs font-bold rounded-full whitespace-nowrap ${getSessionStatus(booking) === "completed"
-                      ? "bg-green-100 text-green-700"
-                      : getSessionStatus(booking) === "ongoing"
-                        ? "bg-blue-100 text-blue-700"
-                        : getSessionStatus(booking) === "not attended"
-                          ? "bg-red-100 text-red-700"
-                          : "bg-yellow-100 text-yellow-700"
-                      }`}>
-                      {getSessionStatus(booking) === "completed" ? "Completed" : getSessionStatus(booking) === "ongoing" ? "Ongoing" : getSessionStatus(booking) === "not attended" ? "Not Attended" : "Not Started"}
-                    </span>
-                  </div>
-                </div>
-                {/* Divider below profile row */}
-                <div className="border-t border-gray-200 my-3"></div>
-                <div className="mb-3 sm:mb-4">
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-gray-500 font-semibold uppercase">Starting Time:</span>
-                      <span className="text-sm sm:text-base font-bold text-blue-600">
-                        {booking.startTime
-                          ? new Date(booking.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })
-                          : (() => {
-                            if (!booking.sessionTime) return 'TBD';
-                            const [hours, minutes] = booking.sessionTime.split(':');
-                            const date = new Date(0, 0, 0, parseInt(hours), parseInt(minutes));
-                            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
-                          })()
-                        }
-                      </span>
-                    </div>
-                    {(booking.startTime || booking.sessionTime) && (
-                      <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
-                        <span className="text-gray-400">Duration:</span>
-                        <span>{booking.duration || 1} hour{booking.duration > 1 ? 's' : ''}</span>
-                      </div>
-                    )}
-                  </div>
-                  <span className={`inline-flex items-center mt-2 px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${
-                    booking.mode === 'online'
-                      ? 'bg-blue-100 text-blue-700 border border-blue-300'
-                      : 'bg-gray-100 text-gray-600 border border-gray-300'
-                  }`}>
-                    <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${
-                      booking.mode === 'online' ? 'bg-blue-500' : 'bg-gray-400'
-                    }`}></span>
-                    {booking.mode || 'Mode'}
-                  </span>
-                </div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-3 border-t border-gray-200">
-                  <p className="text-green-600 font-bold text-base sm:text-lg">₹{booking.totalPrice}</p>
-                  <div className="flex gap-2 w-full sm:w-auto">
-                    <button
-                      onClick={() => handleMessageTutor(booking.tutor?._id)}
-                      className="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition bg-blue-500 text-white hover:bg-blue-600"
-                    >
-                      Message
-                    </button>
-                    {getSessionStatus(booking) !== "completed" && (
-                      <button
-                        onClick={() => handleShowCode(booking.sessionCode)}
-                        disabled={getSessionStatus(booking) !== "ongoing"}
-                        className={`flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition ${getSessionStatus(booking) === "ongoing"
-                          ? "bg-purple-500 text-white hover:bg-purple-600 cursor-pointer"
-                          : "bg-gray-300 text-gray-500 cursor-not-allowed opacity-60"
-                          }`}
-                      >
-                        Code
-                      </button>
-                    )}
-                    {booking.mode === "online" && getSessionStatus(booking) === "ongoing" && (
-                      <button className="flex-1 sm:flex-none px-4 py-2 bg-green-500 text-white text-xs sm:text-sm font-semibold rounded-lg hover:bg-green-600 transition">
-                        JOIN SESSION
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12">
-            <p className="text-gray-500">No sessions scheduled for today</p>
-          </div>
-        )
-        }
-        </div>
-
-        {/* Upcoming Sessions */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 mb-6 sm:mb-8">
-          <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">Upcoming Sessions</h3>
-          {
-          upcomingSessions.length > 0 ? (
-            <div className="space-y-3">
-              {upcomingSessions.map((booking) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+              {todaySessions.map((booking) => (
                 <div
                   key={booking._id}
-                  className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 p-4 sm:p-5 border-l-4 border-l-blue-500 border border-gray-200 rounded-lg bg-gray-50 hover:bg-blue-50 hover:shadow-md transition-all duration-300"
+                  className="bg-gradient-to-br from-slate-50 to-white border-2 border-blue-300 rounded-xl p-4 sm:p-5 hover:shadow-lg transition-all duration-300 hover:border-blue-400"
                 >
-                  <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-blue-200 flex items-center justify-center text-blue-600 font-bold text-base sm:text-lg flex-shrink-0 overflow-hidden">
-                    {booking.tutor?.profilePicture ? (
-                      <img src={booking.tutor.profilePicture} alt="Profile" className="w-full h-full object-cover"/>
-                    ) : (
-                      <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                      </svg>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2 mb-2">
-                      <p className="text-gray-800 font-semibold text-sm sm:text-base truncate">{booking.tutor?.fullName}</p>
-                      <span className="text-xs text-gray-500 font-medium truncate">{booking.subject || "Subject"}</span>
+                  <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4 justify-between">
+                    <div className="flex items-start gap-3 sm:gap-4 flex-1">
+                      <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-blue-200 flex items-center justify-center text-blue-600 font-bold text-base sm:text-lg flex-shrink-0 overflow-hidden">
+                        {booking.tutor?.profilePicture ? (
+                          <img src={booking.tutor.profilePicture} alt="Profile" className="w-full h-full object-cover" />
+                        ) : (
+                          <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                          </svg>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-gray-800 font-semibold truncate text-sm sm:text-base">{booking.tutor?.fullName}</p>
+                        <p className="text-blue-600 text-xs font-medium">{booking.subject || "Subject"}</p>
+                      </div>
                     </div>
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-xs sm:text-sm text-gray-600 flex-wrap">
-                      <span className="font-medium">{booking.date ? new Date(booking.date).toLocaleDateString() : (booking.startTime ? new Date(booking.startTime).toLocaleDateString() : "Date")}</span>
-                      <span className="hidden sm:inline text-gray-400">•</span>
-                      <span className="font-medium">{booking.startTime ? new Date(booking.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "Time"}</span>
-                      <span className="hidden sm:inline text-gray-400">•</span>
-                      <span className="capitalize text-blue-600 font-medium">{booking.mode || "Mode"}</span>
+                    <div>
+                      <span className={`px-3 py-1 text-xs font-bold rounded-full whitespace-nowrap ${getSessionStatus(booking) === "completed"
+                        ? "bg-green-100 text-green-700"
+                        : getSessionStatus(booking) === "ongoing"
+                          ? "bg-blue-100 text-blue-700"
+                          : getSessionStatus(booking) === "not attended"
+                            ? "bg-red-100 text-red-700"
+                            : "bg-yellow-100 text-yellow-700"
+                        }`}>
+                        {getSessionStatus(booking) === "completed" ? "Completed" : getSessionStatus(booking) === "ongoing" ? "Ongoing" : getSessionStatus(booking) === "not attended" ? "Not Attended" : "Not Started"}
+                      </span>
                     </div>
                   </div>
-                  <div className="text-left sm:text-right flex-shrink-0 sm:ml-auto w-full sm:w-auto">
+                  {/* Divider below profile row */}
+                  <div className="border-t border-gray-200 my-3"></div>
+                  <div className="mb-3 sm:mb-4">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-500 font-semibold uppercase">Starting Time:</span>
+                        <span className="text-sm sm:text-base font-bold text-blue-600">
+                          {booking.startTime
+                            ? new Date(booking.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })
+                            : (() => {
+                              if (!booking.sessionTime) return 'TBD';
+                              const [hours, minutes] = booking.sessionTime.split(':');
+                              const date = new Date(0, 0, 0, parseInt(hours), parseInt(minutes));
+                              return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+                            })()
+                          }
+                        </span>
+                      </div>
+                      {(booking.startTime || booking.sessionTime) && (
+                        <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600">
+                          <span className="text-gray-400">Duration:</span>
+                          <span>{booking.duration || 1} hour{booking.duration > 1 ? 's' : ''}</span>
+                        </div>
+                      )}
+                    </div>
+                    <span className={`inline-flex items-center mt-2 px-2.5 py-0.5 rounded-full text-xs font-semibold capitalize ${booking.mode === 'online'
+                        ? 'bg-blue-100 text-blue-700 border border-blue-300'
+                        : 'bg-gray-100 text-gray-600 border border-gray-300'
+                      }`}>
+                      <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${booking.mode === 'online' ? 'bg-blue-500' : 'bg-gray-400'
+                        }`}></span>
+                      {booking.mode || 'Mode'}
+                    </span>
+                  </div>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pt-3 border-t border-gray-200">
                     <p className="text-green-600 font-bold text-base sm:text-lg">₹{booking.totalPrice}</p>
+                    <div className="flex gap-2 w-full sm:w-auto">
+                      <button
+                        onClick={() => handleMessageTutor(booking.tutor?._id)}
+                        className="flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition bg-blue-500 text-white hover:bg-blue-600"
+                      >
+                        Message
+                      </button>
+                      {getSessionStatus(booking) !== "completed" && (
+                        <button
+                          onClick={() => handleShowCode(booking.sessionCode)}
+                          disabled={getSessionStatus(booking) !== "ongoing"}
+                          className={`flex-1 sm:flex-none px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition ${getSessionStatus(booking) === "ongoing"
+                            ? "bg-purple-500 text-white hover:bg-purple-600 cursor-pointer"
+                            : "bg-gray-300 text-gray-500 cursor-not-allowed opacity-60"
+                            }`}
+                        >
+                          Code
+                        </button>
+                      )}
+                      {booking.mode === "online" && getSessionStatus(booking) === "ongoing" && (
+                        <button className="flex-1 sm:flex-none px-4 py-2 bg-green-500 text-white text-xs sm:text-sm font-semibold rounded-lg hover:bg-green-600 transition">
+                          JOIN SESSION
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
             <div className="text-center py-12">
-              <p className="text-gray-500">No upcoming sessions</p>
+              <p className="text-gray-500">No sessions scheduled for today</p>
             </div>
           )
-        }
+          }
+        </div>
+
+        {/* Upcoming Sessions */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 mb-6 sm:mb-8">
+          <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">Upcoming Sessions</h3>
+          {
+            upcomingSessions.length > 0 ? (
+              <div className="space-y-3">
+                {upcomingSessions.map((booking) => (
+                  <div
+                    key={booking._id}
+                    className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 p-4 sm:p-5 border-l-4 border-l-blue-500 border border-gray-200 rounded-lg bg-gray-50 hover:bg-blue-50 hover:shadow-md transition-all duration-300"
+                  >
+                    <div className="w-10 sm:w-12 h-10 sm:h-12 rounded-full bg-blue-200 flex items-center justify-center text-blue-600 font-bold text-base sm:text-lg flex-shrink-0 overflow-hidden">
+                      {booking.tutor?.profilePicture ? (
+                        <img src={booking.tutor.profilePicture} alt="Profile" className="w-full h-full object-cover" />
+                      ) : (
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                        </svg>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-2 mb-2">
+                        <p className="text-gray-800 font-semibold text-sm sm:text-base truncate">{booking.tutor?.fullName}</p>
+                        <span className="text-xs text-gray-500 font-medium truncate">{booking.subject || "Subject"}</span>
+                      </div>
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-xs sm:text-sm text-gray-600 flex-wrap">
+                        <span className="font-medium">{booking.date ? new Date(booking.date).toLocaleDateString() : (booking.startTime ? new Date(booking.startTime).toLocaleDateString() : "Date")}</span>
+                        <span className="hidden sm:inline text-gray-400">•</span>
+                        <span className="font-medium">{booking.startTime ? new Date(booking.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "Time"}</span>
+                        <span className="hidden sm:inline text-gray-400">•</span>
+                        <span className="capitalize text-blue-600 font-medium">{booking.mode || "Mode"}</span>
+                      </div>
+                    </div>
+                    <div className="text-left sm:text-right flex-shrink-0 sm:ml-auto w-full sm:w-auto">
+                      <p className="text-green-600 font-bold text-base sm:text-lg">₹{booking.totalPrice}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-gray-500">No upcoming sessions</p>
+              </div>
+            )
+          }
         </div>
 
       </div> {/* end: unified width wrapper */}
