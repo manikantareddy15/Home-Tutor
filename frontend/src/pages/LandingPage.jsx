@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { BookOpen, Users, Award, MessageSquare, Clock, Zap } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
 
 // Custom hook for intersection observer
 const useInView = (ref, options = {}) => {
@@ -42,7 +41,7 @@ const CountupNumber = ({ target, duration = 2000, suffix = "" }) => {
       if (!startTime) startTime = currentTime;
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      
+
       // Parse target number
       const numTarget = parseInt(target.toString().replace(/[^0-9]/g, ''));
       const current = Math.floor(numTarget * progress);
