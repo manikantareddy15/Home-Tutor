@@ -6,28 +6,27 @@
       "use": "@vercel/node"
     }
   ],
-  "headers": [
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "https://home-tutor-nfra.vercel.app" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET,POST,PUT,PATCH,DELETE,OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type,Authorization" },
-        { "key": "Access-Control-Allow-Credentials", "value": "true" }
-      ]
-    }
-  ],
   "routes": [
     {
       "src": "/api/(.*)",
       "methods": ["OPTIONS"],
       "status": 204,
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "https://home-tutor-nfra.vercel.app" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET,POST,PUT,PATCH,DELETE,OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type,Authorization" },
-        { "key": "Access-Control-Allow-Credentials", "value": "true" }
-      ]
+      "headers": {
+        "Access-Control-Allow-Origin": "https://home-tutor-nfra.vercel.app",
+        "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type,Authorization",
+        "Access-Control-Allow-Credentials": "true"
+      }
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "src/app.js",
+      "headers": {
+        "Access-Control-Allow-Origin": "https://home-tutor-nfra.vercel.app",
+        "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type,Authorization",
+        "Access-Control-Allow-Credentials": "true"
+      }
     },
     {
       "src": "/(.*)",
