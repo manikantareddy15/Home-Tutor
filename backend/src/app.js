@@ -17,17 +17,28 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-app.use(helmet());
-
 const allowedOrigins = process.env.CLIENT_URL
   ? process.env.CLIENT_URL.split(",").map(s => s.trim())
   : ["http://localhost:5173", "http://localhost:5174"];
 
+// CORS must come before helmet
 app.use(cors({
   origin: allowedOrigins,
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+// Handle preflight explicitly
+app.options("*", cors({
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 app.use(express.json());
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
