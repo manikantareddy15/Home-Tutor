@@ -9,7 +9,9 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "methods": ["OPTIONS"],
+      "methods": [
+        "OPTIONS"
+      ],
       "status": 204,
       "headers": {
         "Access-Control-Allow-Origin": "https://home-tutor-nfra.vercel.app",

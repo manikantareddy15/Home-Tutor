@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import path from "path";
 import { fileURLToPath } from "url";
+import mongoose from "mongoose";
 import authRoutes from "./routes/auth.routes.js";
 import tutorRoutes from "./routes/tutor.routes.js";
 import bookingRoutes from "./routes/booking.routes.js";
@@ -45,6 +46,20 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // Serve uploads directory
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+
+// Connect to MongoDB on first request (for Vercel serverless)
+let dbConnected = false;
+app.use(async (_req, _res, next) => {
+  if (!dbConnected && mongoose.connection.readyState === 0 && process.env.MONGO_URI) {
+    try {
+      await mongoose.connect(process.env.MONGO_URI);
+      dbConnected = true;
+    } catch (err) {
+      return next(err);
+    }
+  }
+  next();
+});
 
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
 app.use("/api/auth", authRoutes);
