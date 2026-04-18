@@ -8,7 +8,11 @@ import { connectDB } from "./config/db.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-dotenv.config({ path: path.join(__dirname, "../.env") });
+
+// Load .env only in development
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config({ path: path.join(__dirname, "../.env") });
+}
 
 // Create HTTP server
 const server = http.createServer(app);
@@ -16,10 +20,13 @@ const server = http.createServer(app);
 // Initialize Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || ["http://localhost:5173", "http://localhost:5174"],
+    origin: process.env.CLIENT_URL || (process.env.NODE_ENV === "production" 
+      ? ["https://your-frontend-domain.vercel.app"] 
+      : ["http://localhost:5173", "http://localhost:5174"]),
     credentials: true,
     methods: ["GET", "POST"]
-  }
+  },
+  transports: ["websocket", "polling"]
 });
 
 // Store user socket connections
@@ -84,11 +91,28 @@ const start = async () => {
   await connectDB();
   const port = process.env.PORT || 5000;
   server.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`Server running on port ${port} in ${process.env.NODE_ENV || "development"} mode`);
   });
 };
 
+// Graceful shutdown
+process.on("SIGTERM", () => {
+  console.log("SIGTERM signal received: closing HTTP server");
+  server.close(() => {
+    console.log("HTTP server closed");
+    process.exit(0);
+  });
+});
+
+process.on("SIGINT", () => {
+  console.log("SIGINT signal received: closing HTTP server");
+  server.close(() => {
+    console.log("HTTP server closed");
+    process.exit(0);
+  });
+});
+
 start().catch((e) => {
-  console.error(e);
+  console.error("Server startup error:", e);
   process.exit(1);
 });
