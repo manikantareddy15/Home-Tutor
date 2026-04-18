@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import path from "path";
 import { fileURLToPath } from "url";
+import mongoose from "mongoose";
 import authRoutes from "./routes/auth.routes.js";
 import tutorRoutes from "./routes/tutor.routes.js";
 import bookingRoutes from "./routes/booking.routes.js";
@@ -17,18 +18,48 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-app.use(helmet());
+const allowedOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(",").map(s => s.trim())
+  : ["http://localhost:5173", "http://localhost:5174"];
+
+// CORS must come before helmet
 app.use(cors({
-  origin: process.env.CLIENT_URL || ["http://localhost:5173", "http://localhost:5174"],
+  origin: allowedOrigins,
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+// Handle preflight explicitly
+app.options("*", cors({
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 app.use(express.json());
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // Serve uploads directory
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+
+// Connect to MongoDB on first request (for Vercel serverless)
+let dbConnected = false;
+app.use(async (_req, _res, next) => {
+  if (!dbConnected && mongoose.connection.readyState === 0 && process.env.MONGO_URI) {
+    try {
+      await mongoose.connect(process.env.MONGO_URI);
+      dbConnected = true;
+    } catch (err) {
+      return next(err);
+    }
+  }
+  next();
+});
 
 app.get("/api/health", (_req, res) => res.json({ ok: true }));
 app.use("/api/auth", authRoutes);
